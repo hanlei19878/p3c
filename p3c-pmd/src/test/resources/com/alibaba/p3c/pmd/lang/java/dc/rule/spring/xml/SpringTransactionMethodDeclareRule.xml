@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <test-code>
+        <description>SpringTransactionMethodDeclareRule not effect Class annotation</description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+@Transactional
+public class TestTransactional {
+    @Override
+    public void test(){
+    }
+}
+        ]]></code>
+    </test-code>
+    <test-code>
+        <description>SpringTransactionMethodDeclareRule not effect private protected or static abstract method</description>
+        <expected-problems>4</expected-problems>
+        <expected-linenumbers>5,7,9,11</expected-linenumbers>
+        <code><![CDATA[
+@Service
+public class TestTransactional {
+    @Transactional
+    public void test1(){}
+    @Transactional
+    public static void test2(){}
+    @Transactional
+    abstract void test3(){}
+    @Transactional
+    private void test4(){}
+    @Transactional
+    void test5(){}
+}
+        ]]></code>
+    </test-code>
+    <test-code>
+        <description>SpringTransactionMethodDeclareRule not effect not spring bean</description>
+        <expected-problems>5</expected-problems>
+        <expected-linenumbers>3,5,7,9,11</expected-linenumbers>
+        <code><![CDATA[
+@TEST11
+public class TestTransactional {
+    @Transactional
+    public void test1(){}
+    @Transactional
+    public static void test2(){}
+    @Transactional
+    abstract void test3(){}
+    @Transactional
+    private void test4(){}
+    @Transactional
+    void test5(){}
+}
+        ]]></code>
+    </test-code>
+    <test-code>
+        <description>SpringTransactionMethodDeclareRule not effect not spring bean CreatBatchTranFileForE</description>
+        <expected-problems>2</expected-problems>
+        <expected-linenumbers>79,80</expected-linenumbers>
+        <code><![CDATA[
+package com.dcits.ensemble.nl.service.eod;
+
+import com.dcits.ensemble.adapter.util.FileUtil;
+import com.dcits.ensemble.eod.base.BaseJobProcessor;
+import com.dcits.ensemble.nl.business.api.repository.createfile.INlFileDefRepository;
+import com.dcits.ensemble.nl.business.api.repository.settel.INlBatchRecFlowRepository;
+import com.dcits.ensemble.nl.business.api.repository.settel.INlWriteFileConfigRepository;
+import com.dcits.ensemble.nl.business.api.repository.settel.INlZbankResultRepository;
+import com.dcits.ensemble.nl.business.model.dbmodel.createfile.NlFileDef;
+import com.dcits.ensemble.nl.business.model.dbmodel.createfile.NlWriteFileConfig;
+import com.dcits.ensemble.nl.business.model.dbmodel.settle.NlBatchRecFlow;
+import com.dcits.ensemble.nl.business.model.dbmodel.settle.NlZbankResult;
+import com.dcits.ensemble.nl.rec.core.sequens.AgSequences;
+import com.dcits.ensemble.nl.service.api.application.util.IZbptUtil;
+import com.dcits.ensemble.nl.service.application.util.CsvUtil;
+import com.dcits.ensemble.nl.service.application.util.RsaUtil;
+import com.dcits.ensemble.nl.service.model.application.adapter.ZBankBatchRepayRequest;
+import com.dcits.ensemble.nl.service.model.application.adapter.ZBankBatchRepayRespone;
+import com.dcits.ensemble.util.BusiUtil;
+import com.dcits.ensemble.util.DateUtil;
+import com.dcits.galaxy.core.spring.SpringApplicationContext;
+import com.dcits.galaxy.dtp.annotation.SubmitLog;
+import com.dcits.orion.batch.api.bean.ITaskParam;
+import com.dcits.orion.core.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @description: E账通批量下账
+ * @version: V1.0
+ * @author: zhangyangal
+ * @create: 2019-03-29 11:29
+ **/
+@Service
+public class CreatBatchTranFileForE extends BaseJobProcessor {
+    private static final Logger logger = LoggerFactory.getLogger(CreatBatchTranFileForE.class);
+
+    static final int SPLIT_SIZE = 1;
+    int num = 0;
+    int fileNum = 0;
+    BigDecimal totalAmt = new BigDecimal(0);
+    String payTenantId = "";
+    @Resource
+    private INlWriteFileConfigRepository nlWriteFileConfigRepository;
+    @Resource
+    private INlBatchRecFlowRepository nlBatchRecFlowRepository;
+    @Resource
+    private INlZbankResultRepository nlZbankResultRepository;
+    @Resource
+    private INlFileDefRepository nlFileDefRepository;
+    @Resource
+    private IZbptUtil zbptUtil;
+
+    @Override
+    public void execute(ITaskParam taskParam) {
+        // 1.获取商户号
+        List<String> mchNoList = nlBatchRecFlowRepository.getMchNo();
+        if (BusiUtil.isNull(mchNoList)) {
+            return;
+        }
+        if (logger.isInfoEnabled()) {
+            logger.debug("【生成E账通批量下账文件开始】");
+        }
+        String runDate = Context.getInstance().getRunDate();
+        CreatBatchTranFileForE batchTranFileForE = SpringApplicationContext.getContext().getBean(CreatBatchTranFileForE.class);
+        for (String mchNo : mchNoList) {
+            if (!"".equals(mchNo) && BusiUtil.isNotNull(mchNo)) {
+                creatFileForE(mchNo, batchTranFileForE, runDate);
+                this.creatFileForE(mchNo, batchTranFileForE, runDate);
+            }
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void creatFileForE(String mchNo, CreatBatchTranFileForE batchTranFileForE, String runDate) {
+        List<NlBatchRecFlow> nlBatchRecFlows = nlBatchRecFlowRepository.getNlBatchRecFlowByMchNo(mchNo);
+        if (BusiUtil.isNull(nlBatchRecFlows)) {
+            logger.error("E账通批量扣款取数无数据!");
+            return;
+        }
+        // 3.获取文件路径
+        NlFileDef nlFileDef = nlFileDefRepository.getNlFileDefByPrimaryKey("E");
+        // 4.生成文件名称并且存入数据库
+        String fileName = batchTranFileForE.createFileName("E", runDate);
+        logger.error("[E账通生成文件名称: " + fileName + "]");
+        // 5.生成文件
+        createFile(nlFileDef, fileName, nlBatchRecFlows);
+        // 生成无序序列号
+        String orderId = "NL" + AgSequences.getInvoiceTranNo();
+        logger.error("[E账通生成文件ORDER_ID: " + orderId + "]");
+        for (NlBatchRecFlow nlBatchRecFlow : nlBatchRecFlows) {
+            nlBatchRecFlow.setStatus("2");
+            nlBatchRecFlow.setOrderId(orderId);
+        }
+        // 6.推送文件至公共服务器地址
+        SftpUploadForE.uploadToEforPL(getFfu(nlFileDef, runDate, fileName.replaceAll("_nokey", "")));
+        // 7.调用E账通批量下账
+        ZBankBatchRepayRespone respone = zBankBatchRepayRequest(nlFileDef, fileName, mchNo, nlBatchRecFlows, orderId);
+        logger.error("[调用E账通批量下账实时返回: " + respone + "]");
+        // 8.更新状态
+        if (BusiUtil.isNotNull(respone) && BusiUtil.isEquals(respone.getBody().getStatus(), "processing")) {
+            updateStates(nlBatchRecFlows, nlFileDef, fileName);
+        }
+    }
+
+    /**
+     * 生成文件名称并且存入数据库
+     *
+     * @param fileId
+     * @param runDate
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public String createFileName(String fileId, String runDate) {
+        NlWriteFileConfig nlWriteFileConfig = nlWriteFileConfigRepository.selectNlWriteFileConfig();
+        NlWriteFileConfig writeFileConfig = new NlWriteFileConfig();
+        if (BusiUtil.isNull(nlWriteFileConfig)) {
+            fileNum = 01;
+            writeFileConfig.setFileId(fileId);
+            writeFileConfig.setSndFileName(runDate + "_742031_" + fileNum + "_nokey.csv");
+            writeFileConfig.setRecFileName(runDate + "_742031_" + fileNum + "_resp.csv");
+            writeFileConfig.setFileNum(fileNum);
+        } else {
+            Long fileNum = nlWriteFileConfigRepository.selectMaxFileNum(fileId) + 1;
+            writeFileConfig.setFileId(fileId);
+            writeFileConfig.setSndFileName(runDate + "_742031_" + fileNum + "_nokey.csv");
+            writeFileConfig.setRecFileName(runDate + "_742031_" + fileNum + "_resp.csv");
+            writeFileConfig.setFileNum(fileNum);
+        }
+        nlWriteFileConfigRepository.insertNlWriteFileConfig(writeFileConfig);
+        return writeFileConfig.getSndFileName();
+    }
+
+    /**
+     * 生成文件
+     *
+     * @param nlFileDef
+     */
+    public void createFile(NlFileDef nlFileDef, String fileName, List<NlBatchRecFlow> nlBatchRecFlows) {
+        logger.error("[E账通生成明文文件路径: " + nlFileDef.getFileSndDir() + "]");
+        // 2.生成E账通批量下账源文件
+        try {
+            CsvUtil.createCSVFile(getBatchTranModelFileForE(nlBatchRecFlows), nlFileDef.getFileSndDir(), fileName);
+        } catch (Exception e) {
+            logger.error("E账通批量下账原文件导出异常" + e);
+        }
+        // 3.获取源文件绝对路径 / 目标加密文件绝对路径 / 秘钥
+        String srcFilePath = nlFileDef.getFileSndDir() + fileName;
+        logger.error("[E账通生成明文文件绝对路径: " + srcFilePath + "]");
+        String derFilePath = nlFileDef.getFileSndDir() + fileName.replaceAll("_nokey", "");
+        logger.error("[E账通生成密文文件绝对路径: " + derFilePath + "]");
+        String privateKey = RsaUtil.getRsaKsy().get("privateKey");
+        logger.error("[E账通生成密文文件私钥: " + privateKey + "]");
+        // 4.生成E账通批量下账加密文件
+        try {
+            CsvUtil.creatFileByRsa(srcFilePath, derFilePath, privateKey);
+        } catch (IOException e) {
+            logger.error("E账通批量下账加密文件导出异常" + e);
+        }
+    }
+
+    /**
+     * E账通下账文件模型组数
+     *
+     * @param nlBatchRecFlows
+     * @return
+     */
+    public List<Map<String, String>> getBatchTranModelFileForE(List<NlBatchRecFlow> nlBatchRecFlows) {
+        List<Map<String, String>> fileForES = new ArrayList<>();
+        List<NlZbankResult> zbankResults = new ArrayList<>();
+        totalAmt = BigDecimal.ZERO;
+        for (NlBatchRecFlow nlBatchRecFlow : nlBatchRecFlows) {
+            Map<String, String> map = new HashMap<>();
+            // 信用消费单号 = 发放流水
+            map.put("1", nlBatchRecFlow.getReference());
+            // 还款明细单号 = 回收流水 ，和虚户出金记录的TxnRefNo要保持一致
+            map.put("2", nlBatchRecFlow.getBizId());
+            // 附属账户号
+            map.put("3", nlBatchRecFlow.getPayAcctNo());
+            // 金额(单位为分)
+            map.put("4", String.valueOf(nlBatchRecFlow.getSettleAmt().multiply(new BigDecimal("100")).longValue()));
+            totalAmt = totalAmt.add(nlBatchRecFlow.getSettleAmt().multiply(new BigDecimal("100")));
+            fileForES.add(map);
+            NlZbankResult zbankResult = new NlZbankResult();
+            // 商户订单号
+            zbankResult.setBizId(nlBatchRecFlow.getBizId());
+            // 回收流水号
+            zbankResult.setExtend1(nlBatchRecFlow.getBizId());
+            // 发放流水号
+            zbankResult.setExtend2(nlBatchRecFlow.getReference());
+            // 扣款账号
+            zbankResult.setAccountNo(nlBatchRecFlow.getPayAcctNo());
+            // 应扣款金额
+            zbankResult.setAmount(nlBatchRecFlow.getSettleAmt());
+            zbankResult.setBaseAcctNo(nlBatchRecFlow.getBaseAcctNo());
+            zbankResult.setSendTime(Context.getInstance().getRunDate());// 提交时间
+            zbankResult.setBankId(nlBatchRecFlow.getPayeeBankCode());// 银行编码
+            zbankResult.setAccountName(nlBatchRecFlow.getPayAcctName()); // 账户名
+            zbankResult.setIdentType(nlBatchRecFlow.getDocumentType());// 证件类型
+            zbankResult.setIdentNo(nlBatchRecFlow.getDocumentId());// 证件号码
+            zbankResult.setMobileNum(nlBatchRecFlow.getClientPhone());// 用户手机号码
+            zbankResult.setInternalKey(nlBatchRecFlow.getInternalKey().toString());
+            zbankResult.setBatchSeqNo(nlBatchRecFlow.getBatchSeqNo());
+            zbankResult.setChannelFlag(nlBatchRecFlow.getChannelFlag());// 渠道标识
+            zbankResult.setAdvanceAccount(nlBatchRecFlow.getAdvanceAccount());// 渠道账户
+            zbankResult.setAcctSeqNo(nlBatchRecFlow.getAcctSeqNo().toString());
+            zbankResult.setMchNo(nlBatchRecFlow.getMchNo());// 商户号
+            zbankResult.setPayTenantId(nlBatchRecFlow.getPayTenantId());// 租户编号
+            // 支付平台
+            zbankResult.setPayFlag("E");
+            zbankResults.add(zbankResult);
+        }
+        nlZbankResultRepository.insertAndBatch(zbankResults);
+        return fileForES;
+    }
+
+    /**
+     * 调用E账通批量下账
+     *
+     * @param nlFileDef(文件参数配置BEAN)
+     * @param fileName(文件名称)
+     * @param nlBatchRecFlows(文件信息)
+     */
+    public ZBankBatchRepayRespone zBankBatchRepayRequest(NlFileDef nlFileDef, String fileName, String mchNo, List<NlBatchRecFlow> nlBatchRecFlows, String orderId) {
+        // 1.生成文件路径
+        String derFilePath = nlFileDef.getFileSndDir() + fileName.replaceAll("_nokey", "");
+        // 2.生成文件hash值
+        String fileHash = "";
+        try {
+            fileHash = FileUtil.fileHash(derFilePath, "SHA-1");
+        } catch (Exception e) {
+            logger.error("E账通批量下账加密文件FILE_KEY值异常" + e);
+        }
+        // 3.文件总数据
+        int count = nlBatchRecFlows.size();
+        // 4.组装报文
+        ZBankBatchRepayRequest.Body body = new ZBankBatchRepayRequest.Body();
+        // 版本号
+        body.setVersion("1.0.0");
+        // 租户编号
+        body.setPayTenantId(Long.parseLong(nlBatchRecFlows.get(0).getPayTenantId()));
+        // 商户号
+        body.setMchNo(mchNo);
+        // 交易类型
+        body.setTxnType(27);
+        // 请求单号
+        body.setOrderId(orderId);
+        // 文件名称
+        body.setFileName(fileName.replaceAll("_nokey.csv", ""));
+        // 文件生成的hash值
+        body.setFileKey(fileHash);
+        // 总记录数
+        body.setCount(count);
+        // 总金额
+        body.setTotalAmount(totalAmt.stripTrailingZeros().longValue());
+        // 提交日期
+        body.setSendDate(Context.getInstance().getRunDate());
+        // 提交时间
+        body.setSendTime(DateUtil.formatDate(Context.getInstance().getRunDateParse(), DateUtil.PATTERN_SIMPLE_TIME));
+        // 5.调用E账通批量下账文件
+        return zbptUtil.zBankBatchRepayRequest(body);
+    }
+
+    @SubmitLog
+    public void updateStates(List<NlBatchRecFlow> nlBatchRecFlows, NlFileDef nlFileDef, String fileName) {
+        nlBatchRecFlowRepository.updateStatus(nlBatchRecFlows);
+        nlWriteFileConfigRepository.updateSndResultForE(nlFileDef.getFileId(), fileName);
+    }
+
+    public Map<String, String> getFfu(NlFileDef nlFileDef, String runDate, String fileName) {
+        Map<String, String> map = new HashMap<>();
+        // remotePath：远程保存目录
+        map.put("remotePath", nlFileDef.getFileRecDir() + runDate + "/");
+        logger.error("[E账通密文远程保存目录: " + nlFileDef.getFileRecDir() + runDate + "/" + "]");
+        // remoteFileName：保存文件名
+        map.put("remoteFileName", fileName);
+        logger.error("[E账通密文远保存文件名: " + fileName + "]");
+        // localPath：本地上传目录(以路径符号结束)
+        map.put("localPath", nlFileDef.getFileSndDir());
+        logger.error("[E账通密文本地上传目录: " + nlFileDef.getFileSndDir() + "]");
+        // localFileName：上传的文件名
+        map.put("localFileName", fileName);
+        logger.error("[E账通密文本地上传文件名: " + fileName + "]");
+        // sftpfore: 配置文件参数ID
+        map.put("sftpfore", "sftpfore");
+        return map;
+    }
+}
+
+        ]]></code>
+    </test-code>
+</test-data>

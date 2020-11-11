@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<ruleset name="DcJavaSpring" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>DcJavaComments</description>
+    <rule name="SpringServiceBeanCannotHaveViriablesRule"
+          language="java"
+          since="1.6"
+          message="java.spring.dc.SpringServiceBeanCannotHaveViriablesRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.spring.SpringServiceBeanCannotHaveViriablesRule">
+        <priority>1</priority>
+        <example>
+            <![CDATA[
+    Spring Bean对象禁止使用类内部变量(final 变量除外)。Spring容器存放的是单实例对象，多线程运行的时候，线程不安全。
+    禁止在Bean中定义String、Long、Integer、Boolean 、BigDecimal、List、Map、HashMap、ArrayList
+    、double、float、short、boolean、int或其他业务模型Bean等类型的全局变量，
+    这些全局变量由于不是线程安全的，在高并发时，全局变量容易发生线程间串值的问题，从而导致错误逻辑。
+
+    排除: Logger类型变量;
+         对于实现ApplicationContextAware或ApplicationListener的工厂类，
+         通过在变量上增加@SuppressWarnings("AlibabaSpringServiceBeanCannotHaveViriables")注解进行排除。
+            ]]>
+        </example>
+    </rule>
+    <rule name="SpringTransactionMethodDeclareRule"
+          language="java"
+          since="1.6"
+          message="java.spring.dc.SpringTransactionMethodDeclareRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.spring.SpringTransactionMethodDeclareRule">
+        <priority>1</priority>
+        <example>
+            <![CDATA[
+     【建议修改代码或删除Transactional注解】
+     Spring 对于如下方式定义的事务注解不生效（此处仅检测方法声明，不检查调用）。
+    (1) private、protected或static、abstract方法
+    (2) 对象不属于Spring bean或属于Spring bean但没有使用对应的代理去调用方法，如类内部调用的方法调用
+            ]]>
+        </example>
+    </rule>
+    <rule name="SpringTransactionRollBackForRule"
+          language="java"
+          since="1.6"
+          message="java.spring.dc.SpringTransactionRollBackForRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.spring.SpringTransactionRollBackForRule">
+        <priority>1</priority>
+        <example>
+            <![CDATA[
+            对于使用小事务的注解统一使用如下注解方式
+            @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+            原因：Spring 事务注解管理机制只自动回滚Error和RuntimeException异常。
+            实际应用过程中会由于实现原因引入三方包或文件操作等非一般业务逻辑实现，其抛出异常为自定义异常，非RuntimeException继承实现。
+            有可能导致事务无法回滚，造成数据库脏数据。
+            ]]>
+        </example>
+    </rule>
+</ruleset>

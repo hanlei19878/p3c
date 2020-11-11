@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+
+<ruleset name="DcJavaOthers" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>DcJavaComments</description>
+    <rule name="AvoidGalaxyBeanUtilsCopyRule" language="java"
+          message="java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.other.AvoidGalaxyBeanUtilsCopyRule">
+        <description>java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.desc</description>
+        <priority>2</priority>
+        <example>
+            <![CDATA[
+    BeanUtils.copy(...);
+    BeanUtils.copyByClass(...);
+    BeanUtils.listCopyByClass(...);
+    BeanUtils.listCopy(...);
+]]>
+        </example>
+    </rule>
+    <rule name="AvoidNewBigDecimalNonStringRule" language="java"
+          message="java.other.dc.AvoidNewBigDecimalNonStringRule.violation.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.other.AvoidNewBigDecimalNonStringRule">
+        <description>java.other.dc.AvoidNewBigDecimalNonStringRule.rule.desc</description>
+        <priority>3</priority>
+        <example>
+            创建BigDecimal对象时，使用参数为String的构造方法，不要使用参数为int或者double的构造方法。
+            这两种类型在构造时存在精度问题，导致创建的BigDecimal对象与实际期望的值存在误差。
+            识别如下方式错误：
+            类型涵盖（"int","Integer","long","Long","double","Double","float","Float"）
+            方法涵盖（"Integer.parseInt","Double.parseDouble","Float.parseFloat","Long.parseLong"）
+            暂不支持封包类型调用方法识别
+            new BigDecimal(1+1)
+
+            int i=1;
+            BigDecimal b1=new BigDecimal(i);
+            BigDecimal b1=new BigDecimal(i+1);
+        </example>
+    </rule>
+
+    <rule name="AvoidSysOutOrErrorPrintStackInsteadOfLogRule" language="java"
+          message="java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.other.AvoidSysOutOrErrorPrintStackInsteadOfLogRule">
+        <description>java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.desc</description>
+        <priority>2</priority>
+    </rule>
+
+</ruleset>

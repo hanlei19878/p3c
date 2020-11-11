@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="AvoidCreateBusiExceptionUsingNonErrorCode"><![CDATA[
+	public class LoanScheduleCommon {
+    void test(){
+        throw BusiUtil.createBusinessException("TB4710", parValueid, ccy);
+        throw BusiUtil.createBusinessException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusiUtil.createWithoutAuthorizationException("TB4710", parValueid, ccy);
+        throw BusiUtil.createWithoutAuthorizationException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusiUtil.createWithoutConfirmationException("TB4710", parValueid, ccy);
+        throw BusiUtil.createWithoutConfirmationException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusiUtil.throwException("TB4710", parValueid, ccy);
+        throw BusiUtil.throwException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusinessUtils.createBusinessException("TB4710", parValueid, ccy);
+        throw BusinessUtils.createBusinessException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusinessUtils.createWithoutAuthorizationException("TB4710", parValueid, ccy);
+        throw BusinessUtils.createWithoutAuthorizationException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusinessUtils.createWithoutConfirmationException("TB4710", parValueid, ccy);
+        throw BusinessUtils.createWithoutConfirmationException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        throw BusinessUtils.throwException("TB4710", parValueid, ccy);
+        throw BusinessUtils.throwException(
+                "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+        String aaa="asdfasasdfasdf111111113adfPatch";
+        throw BusinessUtils.throwException(
+                aaa);
+        String bbb;
+        bbb="asdfasasdfasdf111111113adfPatch";
+        throw BusinessUtils.throwException(
+                bbb);
+
+    }
+}
+
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Business Exception Must Use Error Code.</description>
+		<expected-problems>9</expected-problems>
+		<expected-linenumbers>4,7,10,13,16,19,22,25,28</expected-linenumbers>
+		<code-ref id="AvoidCreateBusiExceptionUsingNonErrorCode" />
+	</test-code>
+
+</test-data>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<ruleset name="DcJavaException" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>DcJavaComments</description>
+    <rule name="AvoidCreateBusiExceptionUsingNonErrorCode" language="java"
+          message="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.exception.AvoidCreateBusiExceptionUsingNonErrorCode">
+        <description>java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc</description>
+        <priority>1</priority>
+        <example>
+            <![CDATA[
+                业务异常抛错时必须使用错误码，错误码在对应功能模块的**_error_zh_CN.properties中定义。
+                错误码规范[2-4]位大写英文+[4-6]位数字,该范围较宽。便于以后扩展和兼容老核心6位数字错误码。
+                禁止使用英文或中文描述作为错误信息，直接抛出。
+                throw BusiUtil.createBusinessException(
+                     "AccountingFlowDefaultImpl.getFlow drCrDirect is null!");
+            ]]>
+        </example>
+    </rule>
+    <rule name="CatchStatmentShouldHaveLogError" language="java"
+          message="java.exception.dc.CatchStatmentShouldHaveLogError.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.exception.CatchStatmentShouldHaveLogError">
+        <description>java.exception.dc.CatchStatmentShouldHaveLogError.rule.desc</description>
+        <priority>3</priority>
+        <example>
+            <![CDATA[
+                异常捕获类中必须有error日志进行堆栈输出。
+            ]]>
+        </example>
+    </rule>
+</ruleset>

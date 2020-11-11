@@ -1,0 +1,641 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <test-code>
+        <description>SpringTransactionRollBackForRule1</description>
+        <expected-problems>0</expected-problems>
+        <code><![CDATA[
+@Transactional
+public class TestTransactional {
+    @Override
+    public void test(){
+    }
+}
+        ]]></code>
+    </test-code>
+    <test-code>
+        <description>SpringTransactionRollBackForRule not effect private protected or static abstract method</description>
+        <expected-problems>5</expected-problems>
+        <expected-linenumbers>4,6,8,10,12</expected-linenumbers>
+        <code><![CDATA[
+        import java.lang.Exception;
+@Service
+public class TestTransactional {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void test1(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public static void test2(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    abstract void test3(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    private void test4(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    void test5(){}
+    @Transactional
+    public void test6(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+    public static void test7(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+    abstract void test8(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+    private void test9(){}
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+    void test10(){}
+}
+        ]]></code>
+    </test-code>
+
+    <test-code>
+        <description>SpringTransactionRollBackForRule 3</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>78</expected-linenumbers>
+        <code><![CDATA[
+        package com.dcits.ensemble.service.micro.rec;
+
+import com.dcits.ensemble.busi.base.component.availbal.AvailBalNormal;
+import com.dcits.ensemble.busi.base.fun.inv.ReceiptInqueryInvoice;
+import com.dcits.ensemble.busi.base.fun.inv.ReceiptSynInqueryInvoice;
+import com.dcits.ensemble.busi.base.fun.settle.AutoBlockingFun;
+import com.dcits.ensemble.dbmanage.dbmodel.*;
+import com.dcits.ensemble.dbmanage.handle.MbAcctSettleHandle;
+import com.dcits.ensemble.dbmanage.inquiry.*;
+import com.dcits.ensemble.fm.core.FmBaseStor;
+import com.dcits.ensemble.fm.dao.FmParaMeterDao;
+import com.dcits.ensemble.model.agreement.MbAcctSettleModel;
+import com.dcits.ensemble.model.agreement.MbInvoiceModel;
+import com.dcits.ensemble.model.dict.BaseAmtType;
+import com.dcits.ensemble.model.dict.ParameterKey;
+import com.dcits.ensemble.model.event.BaseOutEventModel;
+import com.dcits.ensemble.model.event.other.ReceiptInqueryInvoiceModel;
+import com.dcits.ensemble.model.event.rec.MbReceiptInModel;
+import com.dcits.ensemble.model.event.settle.AcctSettleModel;
+import com.dcits.ensemble.model.receipt.MbReceiptDetailModel;
+import com.dcits.ensemble.model.receipt.MbReceiptModel;
+import com.dcits.ensemble.model.restraint.AcctRestraintsModel;
+import com.dcits.ensemble.sequences.Sequences;
+import com.dcits.ensemble.service.micro.microInterface.IRestraintsMicro;
+import com.dcits.ensemble.util.BusiUtil;
+import com.dcits.galaxy.base.data.BeanResult;
+import com.dcits.orion.core.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * ensemble Created by wujuan on 2016/3/24 贷款自动回收功能
+ */
+@Service
+public class AutoRecMicro {
+    private static final Logger logger = LoggerFactory.getLogger(AutoRecMicro.class);
+
+    @Resource
+    MbInvoiceInquiry mbInvoiceInquiry;
+    @Resource
+    MbAcctSettleInquiry mbAcctSettleInquiry;
+    @Resource
+    MbAgreementInquiry mbAgreementInquiry;
+    @Resource
+    MbAcctInquiry mbAcctInquiry;
+    @Resource
+    ReceiptInqueryInvoice receiptInqueryInvoice;
+    @Resource
+    FmParaMeterDao fmParaMeterDao;
+    @Resource
+    EnsAcctRecMicro ensAcctRecMicro;
+    @Resource
+    ParaInquiry paraInquiry;
+    @Resource
+    IRestraintsMicro iRestraintsMicro;
+    @Resource
+    MbAcctSettleHandle mbAcctSettleHandle;
+    @Resource
+    FmBaseStor fmBaseStor;
+    @Resource
+    ReceiptSynInqueryInvoice receiptSynInqueryInvoice;
+    @Resource
+    AvailBalNormal availBalNormal;
+    @Resource
+    AutoBlockingFun autoBlockingFun;
+
+    @Resource
+    AutoRecPreDealMicro autoRecPreDealMicro;
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public BeanResult process(MbAcct mbAcct) {
+        MbAccountingStatus mbAccountingStatus = paraInquiry.selectAccountingStatusByPk(mbAcct.getAccountingStatus());
+        if (logger.isDebugEnabled()) {
+            logger.debug("start AutoRec process:{}", mbAcct);
+        }
+        String runDate = Context.getInstance().getRunDate();
+        // 随借随还标志
+        String anyTimeRec = "N";
+        // 单据到期标志
+        String isDue;
+        // 查询持续扣款标志
+        String huntingStatus = "N";
+
+        MbAcct mbAcctLead = mbAcctInquiry.getMbLeadAcct(mbAcct.getBaseAcctNo());
+        MbAgreementLoan mbAgreementModel = mbAgreementInquiry.getAgreeLoanByInternalKey(mbAcctLead.getInternalKey());
+
+        if (BusiUtil.isNotNull(mbAgreementModel)) {
+            huntingStatus = BusiUtil.nvl(mbAgreementModel.getHuntingStatus(), "N");
+            anyTimeRec = mbAgreementModel.getAnytimeRec();
+        }
+        if ("D".equals(huntingStatus) && BusiUtil.isNotNull(mbAccountingStatus)) {
+            huntingStatus = BusiUtil.nvl(mbAccountingStatus.getHuntingStatus(), "N");
+        }
+
+        String receiptType;
+        if (BusiUtil.isEquals("Y", anyTimeRec)) {
+            // 随借随还时，相当于提前还本，强制进入还款流程
+            receiptType = "ER";
+            huntingStatus = "Y";
+        } else {
+            // 非随借随还时，相当于正常回收
+            receiptType = "NS";
+        }
+
+        List<MbAcct> mbAcctSubs = mbAcctInquiry.getMbSubAcct(mbAcctLead.getBaseAcctNo());
+        AcctSettleModel acctSettleModel;
+        List<MbInvoiceModel> mbInvoiceModels;
+        List<MbAcctSettleModel> settleModels;
+        BigDecimal recOdAmt = BigDecimal.ZERO;
+        for (MbAcct mbAcctSub : mbAcctSubs) {
+            // 查询单据到期标志
+            isDue = getIsDue(mbAcctSub.getInternalKey());
+            if ("Y".equals(huntingStatus) || "Y".equals(isDue)) {
+                // 获取单据
+
+                if (BusiUtil.isEquals(mbAcctLead.getAcctType(), "Y")) {
+                    mbInvoiceModels = getSynInvoiceModels(mbAcctSub, anyTimeRec, "NS", null);
+                } else {
+                    mbInvoiceModels = getInvoiceModels(mbAcctSub, anyTimeRec, receiptType, null);
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("internal_key:" + mbAcctSub.getInternalKey());
+                    logger.debug("mbInvoiceModels:" + mbInvoiceModels);
+                }
+
+                // 无单据直接返回
+                if (BusiUtil.isNull(mbInvoiceModels)) {
+//                    return new BeanResult();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("mbInvoiceModels:回收单据为空，不自动回收,账户的internal_key:" + mbAcctSub.getInternalKey());
+                    }
+                    continue;
+                }
+                // 获取结算信息
+                settleModels = getAcctSettles(mbAcctSub.getInternalKey(), mbAcctSub.getBranch(),mbAcctSub.getCcy());
+                // 无结算直接直接返回
+                if (BusiUtil.isNull(settleModels)) {
+//                    return new BeanResult();
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("settleModels:回收账户为空，不自动回收,账户的internal_key:" + mbAcctSub.getInternalKey());
+                    }
+                    continue;
+                }
+                // 开始执行结算回收计算
+                String reference = Sequences.getReferenceNo(runDate);
+
+                /**
+                 * 如果客户账没有下账，就不进行贷款回收流程
+                 */
+                // 调用结算事件进行自动扣款处理
+  /*              try {
+                    acctSettleModel = newSettleEvent.process(settleModels, mbInvoiceModels, mbAcctSub, reference);
+                } catch (Exception e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("newSettleEvent error internalKey", mbAcctSub.getInternalKey());
+                        logger.error("newSettleEvent error", e);//mobyzhaofan 20180527增加错误信息
+                    }
+                    // return new BeanResult(e); //
+                    // 如果有异常，直接抛出，这里封装的异常不正确，不能真实反映异常 modify sunhailin 20180531
+                    //throw BusiUtil.createBusinessException("RB6010", e.getStackTrace().toString());
+                    throw e;
+                    //continue;
+
+                }*/
+
+                /**
+                 * add by wangyong on 2019/2/25
+                 *function:众邦项目日终自动回收走批量文件
+                 */
+                if (Context.getInstance().isBatch()){
+                    autoRecPreDealMicro.processEachDueBill(settleModels,mbInvoiceModels,mbAcctSub,reference);
+                }
+
+                // 根据结算信息中自动回收账户中设置,若单据扣款未完增加账户限制   yuanqiana add 2017-02-07
+                /*BigDecimal outstanding = BigDecimal.ZERO;
+                if (BusiUtil.isNotNull(acctSettleModel.getMbInvoiceModels())) {
+                    for (MbInvoiceModel mbInvoice : acctSettleModel.getMbInvoiceModels()) {
+                        outstanding = outstanding.add(mbInvoice.getOutstanding());
+                    }
+                }
+                acctRestraint(outstanding, acctSettleModel);*/
+                //end
+
+                // 执行回收
+                //yuanqiana add 2017-08-14 银团强制走主账户回收
+   /*             if (BusiUtil.isEquals(mbAcctLead.getAcctType(), "Y")) {
+                    executeRecEvent(mbAcctLead, runDate, reference, receiptType, acctSettleModel.getMbAcctSettleModels(),
+                            acctSettleModel.getMbInvoiceModels());
+                    //end
+                } else {
+                    executeRecEvent(mbAcctSub, runDate, reference, receiptType, acctSettleModel.getMbAcctSettleModels(),
+                            acctSettleModel.getMbInvoiceModels());
+                }
+
+                // 是法透关联贷款户累计回收本金
+                recOdAmt = recOdAmt.add(getRecPriAmt(acctSettleModel.getMbInvoiceModels()));*/
+            }
+        }
+        // huangnana 注释更新法人透支账户透支额度--回收操作已经做过额度更新
+        /*
+         * if (recOdAmt.compareTo(BigDecimal.ZERO) > 0) { //更新法人透支账户透支额度
+		 * mbAcctHandle.updateSecBalanceWhenRecDB(mbAcctLead.getBaseAcctNo(),
+		 * recOdAmt); }
+		 */
+
+        return new BeanResult();
+    }
+
+    /**
+     * 根据单据计算回收本金金额
+     *
+     * @param mbInvoiceModels
+     * @return
+     */
+    private BigDecimal getRecPriAmt(List<MbInvoiceModel> mbInvoiceModels) {
+        BigDecimal priAmt = BigDecimal.ZERO;
+        for (MbInvoiceModel mbInvoiceModel : mbInvoiceModels) {
+            if (BaseAmtType.PRI.toString().equals(mbInvoiceModel.getAmtType())) {
+                priAmt = priAmt.add(BusiUtil.nvl(mbInvoiceModel.getDealAmt(), BigDecimal.ZERO));
+            }
+        }
+        return priAmt;
+    }
+
+    /**
+     * 组织调用回收事件
+     *
+     * @param mbAcct
+     * @param runDate
+     * @param reference
+     * @param mbAcctSettleModelNews
+     * @param mbInvoiceModelNews
+     * @return
+     */
+    private BaseOutEventModel executeRecEvent(MbAcct mbAcct, String runDate, String reference, String receiptType,
+                                              List<MbAcctSettleModel> mbAcctSettleModelNews, List<MbInvoiceModel> mbInvoiceModelNews) {
+        BaseOutEventModel out = null;// 计算合计回收金额
+        BigDecimal receiptAmt = BigDecimal.ZERO;
+        for (MbAcctSettleModel mbAcctSettleModelNew : mbAcctSettleModelNews) {
+            if (BusiUtil.isNotNull(mbAcctSettleModelNew.getSettleAmt()))
+                receiptAmt = receiptAmt.add(mbAcctSettleModelNew.getSettleAmt());
+            mbAcctSettleModelNew.setSettleAcctClass("REC");
+        }
+
+        if (receiptAmt.compareTo(BigDecimal.ZERO) == 0) {
+            autoBlockingFun.settleAcctResProcessByInvoices(mbAcct, mbInvoiceModelNews);
+            return out;
+        }
+
+        // 回收模型赋值
+        // 账户基本信息
+        MbReceiptInModel mbReceiptInModel = new MbReceiptInModel();
+        mbReceiptInModel.setInternalKey(mbAcct.getInternalKey());
+        mbReceiptInModel.setBaseAcctNo(mbAcct.getBaseAcctNo());
+        mbReceiptInModel.setProdType(mbAcct.getProdType());
+        mbReceiptInModel.setCcy(mbAcct.getCcy());
+        mbReceiptInModel.setAcctSeqNo(mbAcct.getAcctSeqNo());
+        mbReceiptInModel.setReference(reference);
+        // 回收基本信息
+        MbReceiptModel mbReceiptModel = new MbReceiptModel();
+        mbReceiptModel.setBaseAcctNo(mbAcct.getBaseAcctNo());
+        mbReceiptModel.setAcctSeqNo(mbAcct.getAcctSeqNo());
+        mbReceiptModel.setReceiptDate(runDate);
+        mbReceiptModel.setReceiptAmt(receiptAmt);
+        mbReceiptModel.setReceiptType(receiptType);
+        mbReceiptModel.setReceiptGenCode("A");
+        mbReceiptModel.setNarrative("自动回收");
+        mbReceiptModel.setCcy(mbAcct.getCcy());
+        mbReceiptModel.setLastChangeDate(runDate);
+        mbReceiptModel.setPayer(mbAcct.getClientNo());
+        mbReceiptModel.setUserId(Context.getInstance().getUserId());
+        mbReceiptModel.setVerify("Y");
+        mbReceiptModel.setVerifyDate(runDate);
+        mbReceiptModel.setVerifyUserId(Context.getInstance().getUserId());
+        mbReceiptModel.setSettle("Y");
+        mbReceiptModel.setSettleDate(runDate);
+        mbReceiptModel.setSettleUserId(Context.getInstance().getUserId());
+        mbReceiptModel.setReference(reference);
+        mbReceiptInModel.setMbReceiptModel(mbReceiptModel);
+        // 回收明细信息
+        List<MbReceiptDetailModel> mbReceiptDetailModels = new ArrayList<>();
+        MbReceiptDetailModel mbReceiptDetailModel;
+        for (MbInvoiceModel mbInvoiceModelNew : mbInvoiceModelNews) {
+            if (BusiUtil.isNotNull(mbInvoiceModelNew.getDealAmt())
+                    && mbInvoiceModelNew.getDealAmt().compareTo(BigDecimal.ZERO) > 0) {
+                mbReceiptDetailModel = new MbReceiptDetailModel();
+                //yuanqiana add 2017-08-14  银团贷款分支 银团账户为主账户从单据中取对应账户信息
+                if (BusiUtil.isEquals("Y", mbAcct.getAcctType())) {
+                    mbReceiptDetailModel.setAcctInternalKey(mbInvoiceModelNew.getInternalKey());
+                    mbReceiptDetailModel.setAcctSeqNo(mbInvoiceModelNew.getAcctSeqNo());
+                    mbReceiptDetailModel.setCcy(mbInvoiceModelNew.getCcy());
+                    //end
+                } else {
+                    mbReceiptDetailModel.setAcctInternalKey(mbAcct.getInternalKey());
+                    mbReceiptDetailModel.setAcctSeqNo(mbAcct.getAcctSeqNo());
+                    mbReceiptDetailModel.setCcy(mbAcct.getCcy());
+                }
+                mbReceiptDetailModel.setAmtType(mbInvoiceModelNew.getAmtType());
+                mbReceiptDetailModel.setInvoiceTranNo(mbInvoiceModelNew.getInvoiceTranNo());
+                mbReceiptDetailModel.setRecAmt(mbInvoiceModelNew.getDealAmt());
+                mbReceiptDetailModel.setDueDate(mbInvoiceModelNew.getDueDate());
+                mbReceiptDetailModel.setGracePeriodDate(mbInvoiceModelNew.getGracePeriodDate());
+                mbReceiptDetailModel.setOutstanding(mbInvoiceModelNew.getOutstanding());
+                mbReceiptDetailModel.setRecXrate(BigDecimal.ONE);
+                mbReceiptDetailModel.setRecXrateId("D");
+                mbReceiptDetailModel.setStageNo(mbInvoiceModelNew.getStageNo());//自动回收需要存入期次 modify  by sunhailin 20180206
+                mbReceiptDetailModel.setInvoiceGenMode(mbInvoiceModelNew.getInvoiceGenMode());
+                mbReceiptDetailModels.add(mbReceiptDetailModel);
+            }
+        }
+        mbReceiptInModel.setMbReceiptDetailModels(mbReceiptDetailModels);
+        // 回收结算信息
+        mbReceiptInModel.setMbAcctSettleModels(mbAcctSettleModelNews);
+        // 调用回收事件完成回收
+        // out = new RecEvent(mbReceiptInModel, "11101").processEvent();
+        // yuanqiana add 2016-10-24
+        mbReceiptInModel.setFlag("11101");
+        ensAcctRecMicro.execute(mbReceiptInModel, "C");
+        // end
+        return out;
+    }
+
+    /**
+     * 查询账户结算信息
+     *
+     * @param internalKey
+     * @return
+     */
+    private List<MbAcctSettleModel> getAcctSettles(Long internalKey, String tranBranch, String ccy) {
+        // 获取结算信息
+        List<MbAcctSettle> settles = mbAcctSettleInquiry.selectAutoRecSettles(internalKey);
+
+        List<MbAcctSettleModel> mbAcctSettleModels = null;
+        if (BusiUtil.isNotNull(settles)) {
+            String autoRecTranType = fmParaMeterDao.getParamterValue(ParameterKey.AUTOREC_TRAN_TYPE.toString());
+            if (BusiUtil.isNull(autoRecTranType)) {
+                throw BusiUtil.createBusinessException("FM7017", "自动回收交易类型");
+            }
+            mbAcctSettleModels = new ArrayList<>();
+            MbAcctSettleModel settleModel;
+            for (MbAcctSettle settle : settles) {
+                /*防止自动回收账户的币种与原贷款币种不一致导致挂账*/
+                if(BusiUtil.isNotEquals(ccy, settle.getSettleAcctCcy())) {
+                    continue;
+                }
+                settleModel = new MbAcctSettleModel();
+                settleModel.setInternalKey(settle.getInternalKey());
+                settleModel.setSettleNo(settle.getSettleNo());
+                settleModel.setEventType("REC");
+                settleModel.setRefNo(settle.getRefNo());
+                settleModel.setSettleAcctClass(settle.getSettleAcctClass());
+                settleModel.setSettleMethod(settle.getSettleMethod());
+                settleModel.setPayRecInd(settle.getPayRecInd());
+                settleModel.setAmtType(settle.getAmtType());
+                settleModel.setSettleClient(settle.getSettleClient());
+                settleModel.setSettleBankFlag(settle.getSettleBankFlag());
+                settleModel.setSettleBranch(settle.getSettleBranch());
+                settleModel.setSettleAcctInternalKey(settle.getSettleAcctInternalKey());
+                settleModel.setSettleBaseAcctNo(settle.getSettleBaseAcctNo());
+                settleModel.setSettleAcctName(settle.getSettleAcctName());
+                settleModel.setSettleProdType(settle.getSettleProdType());
+                settleModel.setSettleAcctCcy(settle.getSettleAcctCcy());
+                settleModel.setSettleAcctSeqNo(settle.getSettleAcctSeqNo());
+                settleModel.setSettleCcy(settle.getSettleCcy());
+                settleModel.setSettleAmt(settle.getSettleAmt());
+                settleModel.setSettleXrate(settle.getSettleXrate());
+                settleModel.setSettleXrateId(settle.getSettleXrateId());
+                settleModel.setPriority(settle.getPriority());
+                settleModel.setSettleWeight(settle.getSettleWeight());
+                settleModel.setAutoBlocking(settle.getAutoBlocking());
+                settleModel.setTrustedPayNo(settle.getTrustedPayNo());
+                settleModel.setCompany(settle.getCompany());
+                settleModel.setRestraintSeqNo(settle.getRestraintSeqNo());
+                //modby zhaofan FAT缺陷 #39037 前台如果选择错了 值就会赋值错误 修改地方 1.前台置灰 2.后台修改这段直接赋值
+                //settleModel.setTranType(BusiUtil.nvl(settle.getTranType(), autoRecTranType));
+                settleModel.setTranType(autoRecTranType);
+                settleModel.setTranBranch(tranBranch);
+                //modbyzhoafn 20181206 for cq自动回收增加native为回单打印无native
+                settleModel.setNarrative("贷款回收");
+                mbAcctSettleModels.add(settleModel);
+
+                //delete by daiduan，系统已支持存在冻结的情况下回收，故不需要提前解冻
+                //根据结算信息中自动回收账户中设置解除账户限制  yuanqiana add 2017-02-06
+                /*if (BusiUtil.isNotNull(settle.getRestraintSeqNo())) {
+                    AcctRestraintsModel acctRestraintsModel = new AcctRestraintsModel();
+                    //查询存款账户对应限制信息
+                    String depCertRestraintType = fmBaseStor.getParamterValue("INTERNAL_RES_TYPE");
+                    if (BusiUtil.isNull(depCertRestraintType)) {
+                        throw BusiUtil.createBusinessException("MB3117");
+                    }
+                    MbAcct mbAcct = mbAcctInquiry.getMbAcct(settle.getSettleBaseAcctNo(), settle.getSettleProdType(), settle.getSettleAcctCcy(), settle.getSettleAcctSeqNo());
+                    MbRestraints mbRestraints = restraintsInquiry.getMbRestraintsInfo(mbAcct.getInternalKey(), depCertRestraintType, settle.getRestraintSeqNo());
+
+                    if (BusiUtil.isNotNull(mbRestraints)) {
+                        acctRestraintsModel.setInternalKey(mbAcct.getInternalKey());
+                        acctRestraintsModel.setResSeqNo(settle.getRestraintSeqNo());
+                        acctRestraintsModel.setBaseAcctNo(settle.getSettleBaseAcctNo());
+                        acctRestraintsModel.setCcy(settle.getSettleCcy());
+                        acctRestraintsModel.setProdType(settle.getSettleProdType());
+                        acctRestraintsModel.setSeqNo(settle.getSettleAcctSeqNo());
+                        acctRestraintsModel.setResAcctRange(mbRestraints.getResAcctRange());
+                        acctRestraintsModel.setRestraintType(depCertRestraintType);//账户限制
+                        acctRestraintsModel.setStartDate(mbRestraints.getStartDate());
+                        acctRestraintsModel.setTerm(mbRestraints.getTerm());
+                        acctRestraintsModel.setTermType(mbRestraints.getTermType());
+                        acctRestraintsModel.setEndDate(mbRestraints.getEndDate());
+                        acctRestraintsModel.setNarrative(mbRestraints.getNarrative());
+                        acctRestraintsModel.setPrefix(mbRestraints.getPrefix());
+                        acctRestraintsModel.setDocType(mbRestraints.getDocType());
+                        acctRestraintsModel.setStartChequeNo(mbRestraints.getStartChequeNo());
+                        acctRestraintsModel.setEndChequeNo(mbRestraints.getEndChequeNo());
+                        acctRestraintsModel.setPledgedAmt(mbRestraints.getPledgedAmt());
+                        acctRestraintsModel.setReleaseJudiciaryName(mbRestraints.getReleaseJudiciaryName());
+                        acctRestraintsModel.setReleaseLawNo(mbRestraints.getReleaseLawNo());
+                        acctRestraintsModel.setJudiciaryOfficerId(mbRestraints.getJudiciaryOfficerName());
+                        acctRestraintsModel.setJudiciaryDocumentType(mbRestraints.getJudiciaryDocumentType());
+                        acctRestraintsModel.setJudiciaryDocumentId(mbRestraints.getJudiciaryDocumentId());
+                        acctRestraintsModel.setJudiciaryOthOfficerName(mbRestraints.getJudiciaryOthOfficerName());
+                        acctRestraintsModel.setJudiciaryOthDocumentType(mbRestraints.getJudiciaryOthDocumentType());
+                        acctRestraintsModel.setJudiciaryOthDocumentId(mbRestraints.getJudiciaryOthDocumentId());
+                        acctRestraintsModel.setOption("03");
+                        acctRestraintsModel.setDealType("A");
+                        acctRestraintsModel.setDealClass("ACCT");
+                        //解除限制
+                        iRestraintsMicro.execute(acctRestraintsModel);
+                    }
+                }*/
+                //end
+            }
+
+        }
+
+        return mbAcctSettleModels;
+    }
+
+    /**
+     * 查询生成回收单据
+     *
+     * @param mbAcct
+     * @param anyTimeRec
+     * @return
+     */
+    private List<MbInvoiceModel> getInvoiceModels(MbAcct mbAcct, String anyTimeRec, String receiptType, String intMethod) {
+        return receiptInqueryInvoice.genRecInvoice(mbAcct.getBaseAcctNo(), mbAcct.getAcctSeqNo(), receiptType, null,
+                null, anyTimeRec, intMethod);
+    }
+
+    /**
+     * 查询银团生成回收单据
+     *
+     * @param mbSubAcct
+     * @param anyTimeRec
+     * @return
+     */
+    private List<MbInvoiceModel> getSynInvoiceModels(MbAcct mbSubAcct, String anyTimeRec, String receiptType, String intMethod) {
+        List<MbAcctSettleModel> mbAcctSettleModels = getAcctSettles(mbSubAcct.getInternalKey(), mbSubAcct.getBranch(), mbSubAcct.getCcy());
+
+        BigDecimal invoiceAmt = BigDecimal.ZERO;
+        ReceiptInqueryInvoiceModel receiptInqueryInvoiceModel = new ReceiptInqueryInvoiceModel();
+        receiptInqueryInvoiceModel.setCcy(mbSubAcct.getCcy());
+        receiptInqueryInvoiceModel.setBaseAcctNo(mbSubAcct.getBaseAcctNo());
+        receiptInqueryInvoiceModel.setReceiptType("NS");
+        receiptInqueryInvoiceModel.setReceiptDate(Context.getInstance().getRunDate());
+        //查询正常回收单据信息
+        List<MbInvoiceModel> mbInvoiceModels = receiptSynInqueryInvoice.process(receiptInqueryInvoiceModel);
+
+        for (MbInvoiceModel mbInvoiceModel : mbInvoiceModels) {
+            invoiceAmt = invoiceAmt.add(mbInvoiceModel.getRecAmt());
+        }
+
+        BigDecimal availBal = BigDecimal.ZERO;
+        for (MbAcctSettleModel mbAcctSettleModel : mbAcctSettleModels) {
+            BigDecimal amt = availBalNormal.getAvailBal(mbAcctSettleModel.getSettleAcctInternalKey(), "9999").abs();
+            if (BusiUtil.isNotNull(mbAcctSettleModel.getSettleWeight())) {
+                amt = amt.multiply(mbAcctSettleModel.getSettleWeight());
+            }
+            availBal = availBal.add(amt);
+        }
+        //若可用余额够扣完单据余额则直接扣款，若可用余额不足则用可用余额重新生成单据信息
+        if (availBal.compareTo(invoiceAmt) > 0) {
+            return mbInvoiceModels;
+        } else {
+            receiptInqueryInvoiceModel.setReceiptAmt(availBal);
+        }
+        return receiptSynInqueryInvoice.process(receiptInqueryInvoiceModel);
+    }
+
+    /**
+     * Created by wujuan on 2016/6/22 查询当前贷款是否有当天到期的单据，有返回Y，没有则返回N
+     */
+    private String getIsDue(Long internalKey) {
+        String isDue = "N";
+        String runDate = Context.getInstance().getRunDate();
+        List<MbInvoice> mbInvoices = mbInvoiceInquiry.selectDueDateInvoiceByAmtType(internalKey, runDate, null);
+        if (BusiUtil.isNotNull(mbInvoices)) {
+            isDue = "Y";
+        }
+        return isDue;
+    }
+
+
+    /**
+     * 组织限制信息参数
+     *
+     * @return
+     */
+    private AcctRestraintsModel getRestraintsParam(BigDecimal amt, String option, MbAcctSettleModel settleModel) {
+        MbAcct mbAcct = mbAcctInquiry.getMbAcct(settleModel.getSettleBaseAcctNo(), settleModel.getSettleProdType()
+                , settleModel.getSettleAcctCcy(), settleModel.getSettleAcctSeqNo());
+        AcctRestraintsModel acctRestraintsModel = new AcctRestraintsModel();
+        acctRestraintsModel.setDealType("A");
+        acctRestraintsModel.setDealClass("ACCT");
+        acctRestraintsModel.setOption(option);
+        String depCertRestraintType = fmBaseStor.getParamterValue("INTERNAL_RES_TYPE");
+        if (BusiUtil.isNull(depCertRestraintType)) {
+            throw BusiUtil.createBusinessException("MB3117");
+        }
+        acctRestraintsModel.setRestraintType(depCertRestraintType);//账户限制
+        acctRestraintsModel.setBaseAcctNo(settleModel.getSettleBaseAcctNo());
+        acctRestraintsModel.setCcy(settleModel.getSettleCcy());
+        acctRestraintsModel.setProdType(settleModel.getSettleProdType());
+//        acctRestraintsModel.setSeqNo(settleModel.getSettleAcctSeqNo());
+        acctRestraintsModel.setPledgedAmt(amt);
+        acctRestraintsModel.setStartDate(Context.getInstance().getRunDate());
+        acctRestraintsModel.setInternalKey(mbAcct.getInternalKey());
+        return acctRestraintsModel;
+    }
+
+    /**
+     * 增加账户限制
+     *
+     * @param outstanding
+     * @param acctSettleModel
+     */
+    private void acctRestraint(BigDecimal outstanding, AcctSettleModel acctSettleModel) {
+        if (BusiUtil.isNotNull(acctSettleModel.getMbAcctSettleModels())) {
+            if (outstanding.compareTo(BigDecimal.ZERO) > 0) {
+                List<MbAcctSettle> mbAcctSettles = new ArrayList<>();
+                for (MbAcctSettleModel settle : acctSettleModel.getMbAcctSettleModels()) {
+                    if (null != settle.getAutoBlocking() && "Y".equals(settle.getAutoBlocking())) {
+//                        MbAcctSettle mbAcctSettle = new MbAcctSettle();
+                        if (BusiUtil.isNotNull(settle.getSettleWeight())) {
+                            /*BigDecimal amt = Calculate.mul(outstanding, settle.getSettleWeight());*/
+                            //当自动冻结标识为Y，同时账户可用余额偿还欠款金额，则自动冻结账户欠款金额 add by liuting start
+                            BigDecimal amt = BusiUtil.nvl(settle.getPledgenAmt(), BigDecimal.ZERO);
+                            if (null != amt && amt.compareTo(BigDecimal.ZERO) > 0) {
+                                AcctRestraintsModel acctRestraintsModel = getRestraintsParam(amt, "01", settle);
+                                iRestraintsMicro.execute(acctRestraintsModel);
+                                settle.setRestraintSeqNo(acctRestraintsModel.getResSeqNo());
+                            } else {
+                                continue;
+                            }
+                            //add by liuting end
+                        } else if (BusiUtil.isNotNull(settle.getPriority()) && BusiUtil.isEquals("1", settle.getPriority())) {
+                            AcctRestraintsModel acctRestraintsModel = getRestraintsParam(outstanding, "01", settle);
+                            iRestraintsMicro.execute(acctRestraintsModel);
+                            settle.setRestraintSeqNo(acctRestraintsModel.getResSeqNo());
+                        } else if (BusiUtil.isNull(settle.getPriority()) && BusiUtil.isNull(settle.getPriority())) {
+                            AcctRestraintsModel acctRestraintsModel = getRestraintsParam(outstanding, "01", settle);
+                            iRestraintsMicro.execute(acctRestraintsModel);
+                            settle.setRestraintSeqNo(acctRestraintsModel.getResSeqNo());
+                        }
+
+                        MbAcctSettle mbAcctSettle = new MbAcctSettle();
+                        mbAcctSettle.setInternalKey(settle.getInternalKey());
+                        mbAcctSettle.setSettleNo(settle.getSettleNo());
+                        mbAcctSettle.setRestraintSeqNo(settle.getRestraintSeqNo());
+                        mbAcctSettles.add(mbAcctSettle);
+                    }
+                }
+                //增加结算信息中的resSeqNo,限制编号
+                mbAcctSettleHandle.updateMbAcctSettleDbList(mbAcctSettles);
+            }
+        }
+    }
+}
+
+        ]]></code>
+    </test-code>
+</test-data>

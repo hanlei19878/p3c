@@ -2,11 +2,11 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <parent>
+<!--  <parent>
     <groupId>org.sonatype.oss</groupId>
     <artifactId>oss-parent</artifactId>
     <version>9</version>
-  </parent>
+  </parent>-->
   <groupId>com.alibaba.p3c</groupId>
   <artifactId>p3c-pmd</artifactId>
   <version>2.1.1</version>
@@ -20,7 +20,7 @@
     <kotlin.version>1.3.72</kotlin.version>
   </properties>
   <description>Alibaba Java Coding Guidelines PMD implementations</description>
-  <url>https://github.com/alibaba/p3c</url>
+  <url>https://github.com/hanlei19878/p3c</url>
   <inceptionYear>2017</inceptionYear>
 
   <licenses>
@@ -33,8 +33,8 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/alibaba/p3c</url>
-    <connection>scm:git:https://git@github.com/alibaba/p3c.git</connection>
+    <url>https://github.com/hanlei19878/p3c</url>
+    <connection>scm:git:https://git@github.com/hanlei19878/p3c.git</connection>
   </scm>
 
   <organization>
@@ -44,38 +44,9 @@
 
   <developers>
     <developer>
-      <name>XuanTan</name>
-      <url>https://github.com/xuantan</url>
-      <email>zhangym124@gmail.com</email>
-    </developer>
-    <developer>
-      <name>ChangLe</name>
-      <url>https://github.com/LQZYC</url>
-      <email>lqleo323@gmail.com</email>
-    </developer>
-    <developer>
-      <name>ZengHou</name>
-      <url>https://github.com/fw8899</url>
-      <email>fengwei1983@gmail.com</email>
-    </developer>
-    <developer>
-      <name>ShengYan</name>
-      <url>http://smiler158.github.io/</url>
-      <email>smiler158@163.com</email>
-    </developer>
-    <developer>
-      <name>KeQi</name>
-      <email>lyzw2009@gmail.com</email>
-    </developer>
-    <developer>
-      <name>JunLie</name>
-      <url>https://github.com/SeanCai</url>
-      <email>sean.caikang@gmail.com</email>
-    </developer>
-    <developer>
-      <name>MoYan</name>
-      <url>https://github.com/imu2008</url>
-      <email>panhuawenmail@gmail.com</email>
+      <name>hanlei19878</name>
+      <url>https://github.com/hanlei19878</url>
+      <email>hanlei_19878@163.com</email>
     </developer>
   </developers>
   <dependencies>
@@ -127,6 +98,12 @@
             <ruleset>rulesets/java/ali-orm.xml</ruleset>
             <ruleset>rulesets/java/ali-other.xml</ruleset>
             <ruleset>rulesets/java/ali-set.xml</ruleset>
+            <ruleset>rulesets/java/dc-doc.xml</ruleset>
+            <ruleset>rulesets/java/dc-flowcontrol.xml</ruleset>
+            <ruleset>rulesets/java/dc-other.xml</ruleset>
+            <ruleset>rulesets/java/dc-naming.xml</ruleset>
+            <ruleset>rulesets/java/dc-exception.xml</ruleset>
+            <ruleset>rulesets/java/dc-spring.xml</ruleset>
           </rulesets>
           <excludes>
             <exclude>**/FixClassTypeResolver.java</exclude>
@@ -140,7 +117,7 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
+         <dependencies>
           <dependency>
             <groupId>com.alibaba.p3c</groupId>
             <artifactId>p3c-pmd</artifactId>
@@ -215,7 +192,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+      <!--<plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <version>3.0.0</version>
         <configuration>
@@ -232,8 +209,8 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
+      </plugin>-->
+      <!--<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>2.10.4</version>
@@ -252,7 +229,7 @@
             </tag>
           </tags>
         </configuration>
-      </plugin>
+      </plugin>-->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>

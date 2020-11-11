@@ -1,0 +1,180 @@
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <code-fragment id="GalaxyServiceMethodNameNotOverrideRuleTest1">
+        <![CDATA[
+        import com.dcits.ensemble.service.BaseService;
+        @Service
+public class Core10000101 extends BaseService<Core10000101In,Core10000101Out> implements ICore10000101 {
+            @Override
+            @AAA
+            public BeanResult process(T req) {
+                return null;
+            }
+            //
+            /**/
+            @PPP
+            @Override
+            @AAA
+    public void process (int i,boolean isFlag1,boolean isFlag2) {}
+            @PPP//
+            @Override
+    /**/
+    public void beforeProcess (int i,boolean isFlag1,boolean isFlag2) {}
+    public void beforeProcessCust (int i,boolean isFlag1,boolean isFlag2) {}
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>GalaxyServiceMethodNameNotOverrideRuleTest1</description>
+        <expected-problems>3</expected-problems>
+        <expected-linenumbers>6,14,18</expected-linenumbers>
+        <code-ref id="GalaxyServiceMethodNameNotOverrideRuleTest1" />
+    </test-code>
+
+    <code-fragment id="GalaxyServiceMethodNameNotOverrideRuleTest2">
+        <![CDATA[
+        import com.dcits.ensemble.business.AbstractService;
+        @Service
+public class Core10000101 extends AbstractService implements ICore10000101 {
+    public void clearMDC (int i,boolean isFlag1,boolean isFlag2) {}
+    public void setBusinessEngine (int i,boolean isFlag1,boolean isFlag2) {}
+    public void beforeProcessCust (int i,boolean isFlag1,boolean isFlag2) {}
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>GalaxyServiceMethodNameNotOverrideRuleTest2</description>
+        <expected-problems>0</expected-problems>
+        <code-ref id="GalaxyServiceMethodNameNotOverrideRuleTest2" />
+    </test-code>
+    <code-fragment id="GalaxyServiceMethodNameNotOverrideRuleTest3">
+        <![CDATA[
+        package com.dcits.ensemble.business;
+
+import com.dcits.ensemble.util.BusiUtil;
+import com.dcits.ensemble.util.InvokeUtil;
+import com.dcits.galaxy.base.data.*;
+import com.dcits.orion.core.Context;
+import com.dcits.orion.core.support.AbstractProcess;
+import com.dcits.orion.core.util.BusinessUtils;
+import org.slf4j.MDC;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * @author Chengliang
+ */
+public abstract class AbstractService extends AbstractProcess<BaseRequest, BaseResponse> {
+    /**
+     * 服务前处理
+     *
+     * @param request
+     */
+    @Override
+    public void beforeProcess(BaseRequest request) {
+        // 设置
+        Context.getInstance().setDtpFlag(request.getDtpFlag());
+        //for 华瑞性能POC 取消校验
+        /*List<ThrowExceptionDef> exceptionDefs = new ArrayList<>();
+        IBusiTranCheck busiTranCheck = (IBusiTranCheck) InvokeUtil.invokeObject("busiTranCheck");
+        exceptionDefs.addAll(busiTranCheck.check(request));
+        //自己取个模块对应
+        IBusiCommonCheck iBusiCommonCheck = (IBusiCommonCheck) InvokeUtil.invokeObject("busiCommonCheck");
+        //检查客户有效性
+        exceptionDefs.addAll(iBusiCommonCheck.clientCommonCheck(request));
+
+        ILocalHead localHead = request.getLocalHead();
+
+        List<Result> errorList = new ArrayList<>();
+        List<Result> authList = new ArrayList<>();
+        List<Result> confirmList = new ArrayList<>();
+
+        if (BusiUtil.isNull(localHead)) {
+            localHead = new LocalHead();
+        } else {
+            if (BusinessUtils.isNotNull(localHead.getRet())) {
+                authList.addAll(localHead.getRet());
+            }
+        }
+        for (int i = 0; i < exceptionDefs.size(); i++) {
+            ThrowExceptionDef exceptionDef = exceptionDefs.get(i);
+            if (BusiUtil.isEquals("A", exceptionDef.getExceptionType())) {
+                errorList.addAll(exceptionDef.getBusinessException().getRets().getRet());
+            }
+            if (BusiUtil.isEquals("O", exceptionDef.getExceptionType())) {
+                authList.addAll(exceptionDef.getBusinessException().getRets().getRet());
+            }
+            if (BusiUtil.isEquals("D", exceptionDef.getExceptionType())) {
+                confirmList.addAll(exceptionDef.getBusinessException().getRets().getRet());
+            }
+        }
+
+        if (errorList.size() > 0) {
+            throw BusiUtil.createBusinessException(new Results(errorList));
+        }
+
+
+        localHead.setRet(authList);
+        localHead.setConfirmRet(confirmList);
+        request.setLocalHead(localHead);
+        */
+    }
+
+    /**
+     * 服务后处理
+     *
+     * @param request
+     * @param response
+     */
+    @Override
+    public void afterProcess(BaseRequest request, BaseResponse response) {
+        clearMDC();
+    }
+
+    /**
+     *
+     */
+    private void clearMDC() {
+        // chengliang add 20180831 增加日志分类信息
+        MDC.remove("runDate");
+    }
+}
+
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>GalaxyServiceMethodNameNotOverrideRuleTest3</description>
+        <expected-problems>0</expected-problems>
+        <code-ref id="GalaxyServiceMethodNameNotOverrideRuleTest3" />
+    </test-code>
+
+    <code-fragment id="GalaxyServiceMethodNameNotOverrideRuleTest-pass">
+        <![CDATA[
+        public class Core10000101 extends BaseService<Core10000101In,Core10000101Out> implements ICore10000101 {
+            public void process (int i,boolean isFlag1,boolean isFlag2) {}
+            public void beforeProcess (int i,boolean isFlag1,boolean isFlag2) {}
+            public void beforeProcessCust (int i,boolean isFlag1,boolean isFlag2) {}
+
+            class Core10000102 extends AbstractService implements ICore10000102 {
+                public void clearMDC (int i,boolean isFlag1,boolean isFlag2) {}
+                public void setBusinessEngine (int i,boolean isFlag1,boolean isFlag2) {}
+                public void beforeProcessCust (int i,boolean isFlag1,boolean isFlag2) {}
+            }
+
+            class Core10000103 extends AbstractProcess<Core10000103In,Core10000103Out> implements ICore10000103 {
+                public void innerProcess (int i,boolean isFlag1,boolean isFlag2) {}
+                public void asyncInnerProcess (int i,boolean isFlag1,boolean isFlag2) {}
+                public void beforeProcessCust (int i,boolean isFlag1,boolean isFlag2) {}
+            }
+        }
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>GalaxyServiceMethodNameNotOverrideRuleTest-pass</description>
+        <expected-problems>0</expected-problems>
+        <code-ref id="GalaxyServiceMethodNameNotOverrideRuleTest-pass" />
+    </test-code>
+</test-data>

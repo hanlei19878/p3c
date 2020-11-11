@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<ruleset name="AlibabaJavaComments" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>DcJavaComments</description>
+    <rule name="DcCommentRequiredRule" language="java"
+          message="java.doc.dc.DcCommentRequiredRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.doc.DcCommentRequiredRule">
+<!--        <description>com.alibaba.p3c.pmd.lang.java.dc.rule.doc.DcCommentRequiredRule.desc</description>-->
+        <priority>2</priority>
+    </rule>
+</ruleset>

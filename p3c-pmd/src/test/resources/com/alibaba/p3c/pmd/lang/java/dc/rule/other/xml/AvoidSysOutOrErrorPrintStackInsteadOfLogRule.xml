@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="AvoidSysOutOrErrorPrintStackInsteadOfLogRule"><![CDATA[
+import java.io.*;
+import java.util.zip.GZIPInputStream;
+public class DrwDiscountVerfiyFlowImpl implements IDrwVerifyFlow {
+    public BeanResult execute(AcctOpenCLModel acctOpenCLModel) {
+        System.out.println("11"); //BAD 5
+    }
+    public static void unzipOarFile(String outputDirectory, String zipfilePath) {
+        FileInputStream fis = null;
+        ArchiveInputStream in = null;
+        BufferedInputStream bufferedInputStream = null;
+        try {
+            fis = new FileInputStream(zipfilePath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace(); //BAD 14
+        }  finally {
+            try {
+                if (bufferedInputStream != null) {
+                    bufferedInputStream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace(); //BAD 21
+            }
+        }
+    }
+}
+]]>
+	</code-fragment>
+
+	<test-code>
+		<description>AvoidSysOutOrErrorPrintStackInsteadOfLogRule</description>
+		<expected-problems>3</expected-problems>
+		<expected-linenumbers>5,14,21</expected-linenumbers>
+		<code-ref id="AvoidSysOutOrErrorPrintStackInsteadOfLogRule" />
+	</test-code>
+
+</test-data>

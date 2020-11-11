@@ -284,6 +284,7 @@
     </entry>
 
 
+
     <!-- oop -->
     <entry key="java.oop.EqualsAvoidNullRule.violation.msg">
         <![CDATA[【%s】应该作为equals的参数，而不是调用方]]>
@@ -296,7 +297,7 @@
         <![CDATA[应使用equals方法代替==]]>
     </entry>
     <entry key="java.oop.WrapperTypeEqualityRule.rule.msg">
-        <![CDATA[所有的包装类对象之间值的比较，全部使用equals方法比较。]]>
+        <![CDATA[所有的包装类对象或String之间值的比较，全部使用equals方法比较。]]>
     </entry>
     <entry key="java.oop.WrapperTypeEqualityRule.rule.desc">
         <![CDATA[说明：对于Integer var=?在-128至127之间的赋值，Integer对象是在IntegerCache.cache产生，会复用已有对象，这个区间内的Integer值可以直接使用==进行判断，但是这个区间之外的所有数据，都会在堆上产生，并不会复用已有对象，这是一个大坑，推荐使用equals方法进行判断。]]>
@@ -555,4 +556,131 @@
         <![CDATA[浮点数之间的等值判断，基本数据类型不能用==来比较，包装数据类型不能用equals来判断。]]>
     </entry>
 
+<!-- dc 规则 begin-->
+    <entry key="java.naming.InterfaceShouldBeCamelAndPrefixRule.rule.msg">
+        <![CDATA[接口类名应以I为前缀，其后命名使用UpperCamelCase风格，必须遵从驼峰形式]]>
+    </entry>
+    <entry key="java.naming.InterfaceShouldBeCamelAndPrefixRule.violation.msg">
+        <![CDATA[【%s】接口应该为UpperCamelCase命名风格，并以I为前缀]]>
+    </entry>
+
+    <entry key="java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.msg">
+        <![CDATA[避免用Galaxy BeanUtils的方法copy/copyByClass/listCopyByClass/listCopy进行属性拷贝。]]>
+    </entry>
+    <entry key="java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.desc">
+        <![CDATA[
+说明：1.Galaxy框架提供的BeanUtils拷贝方法（copy/copyByClass/listCopyByClass/listCopy）无异常处理，仅按属性名与类型进行拷贝值。
+        如代码开发时未比对属性或后续调整了Bean定义，会造成属性丢失，并且不易排查。
+      2.不是所有的属性都需拷贝，多余属性的拷贝可能会引起系统异常。
+
+        可通过如下代码方式产生所有属性方法的赋值，后续再做调整
+      	public static void main(String[] args) {
+    		for (Field declaredField : Nl14002407Out.PartnerArrays.class.getDeclaredFields()) {
+        		String name = declaredField.getName().substring(0,1).toUpperCase()+declaredField.getName().substring(1);
+    			System.out.println("partner.set" + name + "(nlPartnerDef.get" + name + "());");
+    		}
+    	}
+
+        ]]>
+    </entry>
+
+    <entry key="java.naming.dc.AllBooleanPropertyShouldNotStartWithIsRule.rule.msg">
+        <![CDATA[类中的任何布尔类型的变量，都不要加is，否则部分框架解析会引起序列化错误或反射类异常]]>
+    </entry>
+    <entry key="java.naming.dc.AllBooleanPropertyShouldNotStartWithIsRule.violation.msg">
+        <![CDATA[布尔字段【%s】不要加is前缀]]>
+    </entry>
+    <entry key="java.naming.dc.GalaxyServiceMethodNameNotOverrideRule.rule.msg">
+        <![CDATA[Galaxy框架服务接口不允许重载如下方法：
+        beforeProcess,afterProcess,clearMDC,setBusinessEngine,getBusinessEngine,
+        process,innerProcess,asyncInnerProcess,subProcess,execProcess]]>
+    </entry>
+    <entry key="java.naming.dc.GalaxyServiceMethodNameNotOverrideRule.violation.msg">
+        <![CDATA[Galaxy框架服务接口不允许重载内部方法]]>
+    </entry>
+    <entry key="java.naming.dc.DaoImplShouldNotImplBaseDaoRule.rule.msg">
+        <![CDATA[DAO类不允许继承自com.dcits.orion.core.dao.BaseDao。改为继承自对应系统的抽象实现类，如EnsBaseDao等。]]>
+    </entry>
+    <entry key="java.naming.dc.DaoImplShouldNotImplBaseDaoRule.violation.msg">
+        <![CDATA[DAO类不允许继承自com.dcits.orion.core.dao.BaseDao]]>
+    </entry>
+
+
+    <entry key="java.spring.dc.SpringServiceBeanCannotHaveViriablesRule.rule.msg">
+        <![CDATA[Spring Bean对象禁止使用类内部变量(final 变量除外)。Spring容器存放的是单实例对象，多线程运行的时候，线程不安全。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringServiceBeanCannotHaveViriablesRule.violation.msg">
+        <![CDATA[Spring Bean对象禁止使用类内部变量(final 变量除外)。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionMethodDeclareRule.rule.msg">
+        <![CDATA[注解【Transactional】在Spring框架中不会产生作用，建议修改代码或删除该注解。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionMethodDeclareRule.violation.msg">
+        <![CDATA[方法【%s】的注解【Transactional】在Spring框架中不会产生作用。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionRollBackForRule.rule.msg">
+        <![CDATA[新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionRollBackForRule.violation.msg">
+        <![CDATA[新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。]]>
+    </entry>
+    <entry key="java.flowcontrol.dc.AvoidProcessInLogIfRule.rule.msg">
+        <![CDATA[日志判定if分支中不应存在业务处理代码]]>
+    </entry>
+    <entry key="java.flowcontrol.dc.AvoidProcessInLogIfRule.violation.msg">
+        <![CDATA[日志判定If分支中不应存在业务处理代码]]>
+    </entry>
+    <entry key="java.other.dc.AvoidNewBigDecimalNonStringRule.violation.msg">
+        <![CDATA[创建BigDecimal对象时，使用参数为String的构造方法（部分识别）]]>
+    </entry>
+    <entry key="java.other.dc.AvoidNewBigDecimalNonStringRule.rule.desc">
+        <![CDATA[
+            创建BigDecimal对象时，使用参数为String的构造方法（部分识别）。
+            不要使用参数为int或者double的构造方法，这两种类型在构造时存在精度问题，导致创建的BigDecimal对象与实际期望的值存在误差。
+        ]]>
+    </entry>
+    <entry key="java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.msg">
+        <![CDATA[避免用System.out.print或e.printStackTrace代替logger输出]]>
+    </entry>
+    <entry key="java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.desc">
+        <![CDATA[
+            避免用System.out.print或e.printStackTrace代替logger输出。
+            不允许使用e.printStackTrace()，使用logger输出堆栈。
+            禁用System.out.println()
+        ]]>
+    </entry>
+
+    <entry key="java.doc.dc.DcCommentRequiredRule.violation.msg.methodCommentRequirement.Required">
+        <![CDATA[方法【%s】缺少JavaDoc形式的注释。]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.violation.msg.methodCommentRequirement.default.Required">
+        <![CDATA[方法缺少JavaDoc形式的注释。]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.rule.msg">
+        <![CDATA[方法缺少JavaDoc形式的注释。]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.rule.desc">
+        <![CDATA[方法缺少JavaDoc形式的注释。]]>
+    </entry>
+
+
+    <entry key="java.exception.dc.CatchStatmentShouldHaveLogError.rule.msg">
+        <![CDATA[异常捕获类中必须有error日志进行堆栈输出。]]>
+    </entry>
+    <entry key="java.exception.dc.CatchStatmentShouldHaveLogError.rule.desc">
+        <![CDATA[
+            异常捕获类中必须有logger.error形式日志输出。输出内容：关键业务信息，异常堆栈。
+        ]]>
+    </entry>
+
+    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.msg">
+        <![CDATA[业务异常抛错时必须使用错误码，错误码在对应功能模块的**_error_zh_CN.properties中定义。]]>
+    </entry>
+    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc">
+        <![CDATA[
+            业务异常抛错时必须使用错误码，错误码在对应功能模块的**_error_zh_CN.properties中定义。
+            禁止使用英文或中文描述作为错误信息，直接抛出。
+        ]]>
+    </entry>
+    <!-- dc 规则 end-->
 </properties>

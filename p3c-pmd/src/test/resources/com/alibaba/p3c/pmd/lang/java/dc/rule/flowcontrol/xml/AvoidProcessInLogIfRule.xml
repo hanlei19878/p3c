@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="AvoidProcessInLogIfRule"><![CDATA[
+	import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+public class AvoidProcessInLogIfRuleTest implements ITest{
+	private static final Logger log = LoggerFactory.getLogger(AvoidGalaxyBeanUtilsCopyRuleTest.class);
+
+    public void test(Object source){
+    	if(1==1){
+    		log.debug("111111");
+    	}
+    	if(1==1&&log.isDebugEnabled()&&1=1){
+    		//console out OK
+    		System.
+    		out.
+    		println
+    			("1111");
+			//log out OK
+    		log.
+    		debug("111111");
+			//log out OK
+    		log.debug("111"
+    			+"111");
+    		//method out BAD
+    		pp(1111);
+    	}
+    	log.isInfoEnabled();
+    	int i=0;
+    	if(1==1&&log.isInfoEnabled()&&1=1){
+			//method out BAD
+    		pp(1111);
+    	}
+    	if(1==1&&log.isWarnEnabled()&&1=1){
+			//method out BAD
+    		pp(1111);
+    	}
+    	if(1==1&&log.isErrorEnabled()&&1=1){
+			//method out BAD
+    		pp(1111);
+    		if(1==1&&log.isTraceEnabled()&&1=1){
+				//method out BAD
+    			pp(1111);
+    		}
+    	}
+    	if(1==1&&log.isTraceEnabled()&&1=1){
+			//method out BAD
+    		pp(1111);
+    	}
+    		pp(1111);
+    	if(1==1&&log.isTraceEnabled()&&1=1) pp(1111);
+    		pp(1111);
+    	if(log.isTraceEnabled()){
+			//method out BAD
+    		pp(1111);
+    		pp(1111);
+    	}
+    		pp(1111);
+
+    }
+}
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Business Process Code Should Not in Logging If Statement.</description>
+		<!--循环处理两次会抛出两次异常-->
+		<expected-problems>10</expected-problems>
+		<expected-linenumbers>23,29,33,37,40,40,45,48,52,53</expected-linenumbers>
+		<code-ref id="AvoidProcessInLogIfRule" />
+	</test-code>
+
+</test-data>

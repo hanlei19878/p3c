@@ -1,0 +1,37 @@
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <code-fragment id="InterfaceNaming">
+        <![CDATA[
+public interface ITestInterface {
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>Interface Naming shound begin "I"</description>
+        <expected-problems>0</expected-problems>
+        <code-ref id="InterfaceNaming" />
+    </test-code>
+    <code-fragment id="InterfaceNaming1">
+        <![CDATA[
+public interface TestInterface {
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>Interface Naming shound begin "I"</description>
+        <expected-problems>1</expected-problems>
+        <code-ref id="InterfaceNaming1" />
+    </test-code>
+    <code-fragment id="InterfaceNaming2">
+        <![CDATA[
+public class TestInterface {
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>Not Interface Naming Not Process</description>
+        <expected-problems>0</expected-problems>
+        <code-ref id="InterfaceNaming2" />
+    </test-code>
+</test-data>

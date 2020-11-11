@@ -1,0 +1,47 @@
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <code-fragment id="DaoImplShouldNotImplBaseDaoRule">
+        <![CDATA[
+  package com.dcits.ensemble.dbmanage.dao;
+import com.dcits.ensemble.dbmanage.dbmodel.FxMbOtherTranHist;
+import com.dcits.orion.core.dao.BaseDao;
+import org.springframework.stereotype.Repository;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+/**
+ * Created by admin on 2017/09/27 23:33:56.
+ */
+@Repository
+public class FxMbOtherTranHistDao extends BaseDao {
+
+    /**
+     *
+     */
+    private final String DEFAULT_NAME_SPACE = "com.dcits.ensemble.dbmanage.dao.FxMbOtherTranHistDao";
+
+    /**
+     * This method corresponds to the database table FX_MB_OTHER_TRAN_HIST
+     */
+    protected String getNameSpace() {
+        return DEFAULT_NAME_SPACE;
+    }
+
+    public List<FxMbOtherTranHist> getInBusiTypeAndSettleDate(String settlementDate, String busiType) {
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("settlementDate", settlementDate);
+        param.put("busiType", busiType);
+        return super.selectList("getInBusiTypeAndSettleDate", param);
+    }
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>DAO Class Should Not Extends from com.dcits.orion.core.dao.BaseDao.</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>12</expected-linenumbers>
+        <code-ref id="DaoImplShouldNotImplBaseDaoRule" />
+    </test-code>
+
+</test-data>

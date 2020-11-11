@@ -560,4 +560,125 @@ Positive example:
         <![CDATA[To judge the equivalence of floating-point numbers, == cannot be used for primitive types, while equals cannot be used for wrapper classes.]]>
     </entry>
 
+<!--dc rule begin-->
+    <entry key="java.naming.InterfaceShouldBeCamelAndPrefixRule.rule.msg">
+        <![CDATA[Interface class names should be begin with "I" And nouns in UpperCamelCase ]]>
+    </entry>
+    <entry key="java.naming.InterfaceShouldBeCamelAndPrefixRule.violation.msg">
+        <![CDATA[[%s] shound conform to the UpperCamelCase And begin with "I" ]]>
+    </entry>
+    <entry key="java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.msg">
+        <![CDATA[Avoid using *Galaxy BeanUtils* to copy attributes(copy/copyByClass/listCopyByClass/listCopy).]]>
+    </entry>
+    <entry key="java.other.dc.AvoidGalaxyBeanUtilsCopyRule.rule.desc">
+        <![CDATA[
+Note: Not use methods :
+    BeanUtils.copy(...);
+    BeanUtils.copyByClass(...);
+    BeanUtils.listCopyByClass(...);
+    BeanUtils.listCopy(...);
+
+    Using like this code to gen busi code , and Coding.
+
+      	public static void main(String[] args) {
+    		for (Field declaredField : Nl14002407Out.PartnerArrays.class.getDeclaredFields()) {
+        		String name = declaredField.getName().substring(0,1).toUpperCase()+declaredField.getName().substring(1);
+    			System.out.println("partner.set" + name + "(nlPartnerDef.get" + name + "());");
+    		}
+    	}
+        ]]>
+    </entry>
+    <entry key="java.naming.dc.AllBooleanPropertyShouldNotStartWithIsRule.violation.msg">
+        <![CDATA[Boolean variable [%s] should not add prefix is]]>
+    </entry>
+    <entry key="java.naming.dc.AllBooleanPropertyShouldNotStartWithIsRule.rule.msg">
+        <![CDATA[Do not add 'is' as prefix while defining Boolean variable, since it may cause a serialization exception in some Java Frameworks]]>
+    </entry>
+    <entry key="java.naming.dc.GalaxyServiceMethodNameNotOverrideRule.rule.msg">
+        <![CDATA[Using Galaxy framework service impl should not override these methods：
+        beforeProcess,afterProcess,clearMDC,setBusinessEngine,getBusinessEngine,
+        process,innerProcess,asyncInnerProcess,subProcess,execProcess]]>
+    </entry>
+    <entry key="java.naming.dc.GalaxyServiceMethodNameNotOverrideRule.violation.msg">
+        <![CDATA[Galaxy framework service impl  should not override inside methods]]>
+    </entry>
+    <entry key="java.naming.dc.DaoImplShouldNotImplBaseDaoRule.rule.msg">
+        <![CDATA[DAO Class Should Not Extends from com.dcits.orion.core.dao.BaseDao.
+        Should Extends From Application's Abstract Dao.[EnsBaseDao... etc.]]]>
+    </entry>
+    <entry key="java.naming.dc.DaoImplShouldNotImplBaseDaoRule.violation.msg">
+        <![CDATA[DAO Class Should Not Extends from com.dcits.orion.core.dao.BaseDao.]]>
+    </entry>
+    <entry key="java.spring.dc.SpringServiceBeanCannotHaveViriablesRule.rule.msg">
+        <![CDATA[Spring Service Bean should not contains non final variable. Unsafe!!!!]]>
+    </entry>
+    <entry key="java.spring.dc.SpringServiceBeanCannotHaveViriablesRule.violation.msg">
+        <![CDATA[Spring Service Bean should not contains non final variable.]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionMethodDeclareRule.rule.msg">
+        <![CDATA[Annotation Transactional not effect.Modify source Or Delete Annotation.]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionMethodDeclareRule.violation.msg">
+        <![CDATA[Method [%s] :Annotation Transactional not effect.]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionRollBackForRule.rule.msg">
+        <![CDATA[New Transactional Annotation Should Be With "rollbackFor = {Exception.class,Error.class}" Attribute。]]>
+    </entry>
+    <entry key="java.spring.dc.SpringTransactionRollBackForRule.violation.msg">
+        <![CDATA[New Transactional Annotation For【%s】 Should Be With "rollbackFor = {Exception.class,Error.class}" Attribute。]]]>
+    </entry>
+    <entry key="java.flowcontrol.dc.AvoidProcessInLogIfRule.rule.msg">
+        <![CDATA[Business Process Code Should Not in Logging If Statement.]]>
+    </entry>
+    <entry key="java.flowcontrol.dc.AvoidProcessInLogIfRule.violation.msg">
+        <![CDATA[Business Process Code Should Not in Logging If Statement.]]>
+    </entry>
+    <entry key="java.other.dc.AvoidNewBigDecimalNonStringRule.violation.msg">
+        <![CDATA[New BigDecimal Object Should With String Method.(simple)]]>
+    </entry>
+    <entry key="java.other.dc.AvoidNewBigDecimalNonStringRule.rule.desc">
+        <![CDATA[
+            New BigDecimal Object Should With String Method.Avoid use int/double for missing scale.(simple)
+        ]]>
+    </entry>
+    <entry key="java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.msg">
+        <![CDATA[Avoid Use System.out.print/e.printStackTrace Instead of Logger Output info.]]>
+    </entry>
+    <entry key="java.other.dc.AvoidSysOutOrErrorPrintStackInsteadOfLogRule.rule.desc">
+        <![CDATA[
+            Avoid Use System.out.print/e.printStackTrace Instead of Logger Output info.
+            Forbidden e.printStackTrace() Use logger.xxx
+            Forbidden System.out.println()
+        ]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.violation.msg.methodCommentRequirement.Required">
+        <![CDATA[Method [%s] Should Have Comments As JavaDoc.]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.violation.msg.methodCommentRequirement.default.Required">
+        <![CDATA[Method Should Have Comments As JavaDoc.]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.rule.msg">
+        <![CDATA[Method Should Have Comments As JavaDoc.]]>
+    </entry>
+    <entry key="java.doc.dc.DcCommentRequiredRule.rule.desc">
+        <![CDATA[Method Should Have Comments As JavaDoc.]]>
+    </entry>
+    <entry key="java.exception.dc.CatchStatmentShouldHaveLogError.rule.msg">
+        <![CDATA[Catch Statement Block Should Use logger.error To Output Error Stack And Needed Business Detail.]]>
+    </entry>
+    <entry key="java.exception.dc.CatchStatmentShouldHaveLogError.rule.desc">
+        <![CDATA[
+            Catch Statement Block Should Use logger.error To Output Error Stack And Needed Business Detail.
+        ]]>
+    </entry>
+    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.msg">
+        <![CDATA[Business Exception Must Use Error Code. Error Code Define in modules' **_error_zh_CN.properties.]]>
+    </entry>
+    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc">
+        <![CDATA[
+            Business Exception Must Use Error Code. Error Code Define in modules' **_error_zh_CN.properties.
+            Forbidden Throw Actual Message.
+        ]]>
+    </entry>
+    <!--dc rule end-->
 </properties>

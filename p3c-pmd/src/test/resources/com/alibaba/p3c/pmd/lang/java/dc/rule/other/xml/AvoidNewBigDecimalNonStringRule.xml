@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="AvoidNewBigDecimalNonStringRule"><![CDATA[
+import java.math.BigDecimal;
+
+public class LoanScheduleCommon {
+    BigDecimal b1 = new BigDecimal(1);//BAD 4
+    Long l1 = 1L;
+    void test(){
+    BigDecimal b2 = new BigDecimal(1+1);//BAD 7
+        b2 = new BigDecimal(1+"1"); //OK
+     b3 = new BigDecimal("1"); //OK
+     b4 = new BigDecimal(1,null); //OK
+    int i=1;
+    b1=new BigDecimal(i);	//BAD 12
+    b2 = new BigDecimal(i+"1"); // OK
+    b3 = new BigDecimal(l1); //BAD 14
+    b2 = new BigDecimal(Integer.parseInt("111")); //BAD 15
+    b2 = new BigDecimal(Double.parseDouble("111")+"11"); //OK 16
+    b2 = new BigDecimal(Double.parseDouble("111")); //BAD 17
+    b2 = new BigDecimal(b1); //OK 18
+    b2 = new BigDecimal(Long.parseLong("1111111111")); //BAD 19
+    b2 = new BigDecimal(5f); //BAD 20
+    b2 = new BigDecimal(new Long(1L)); //BAD 21
+    Long a = 5L;
+    b2 = new BigDecimal(1L.toString()); //ok 23
+    b2 = new BigDecimal(a.toString()); //ok 24
+    b2 = new BigDecimal(Long.toString(1L)); //ok 25
+    b2 = new BigDecimal(getInt(1L)); //BAD 26
+    }
+
+    Long getInt(Long i){
+    return 0;
+    }
+}
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description> AvoidNewBigDecimalNonStringRule </description>
+		<expected-problems>10</expected-problems>
+		<expected-linenumbers>4,7,12,14,15,17,19,20,21,26</expected-linenumbers>
+		<code-ref id="AvoidNewBigDecimalNonStringRule" />
+	</test-code>
+
+</test-data>

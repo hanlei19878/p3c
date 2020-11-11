@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="SpringServiceBeanCannotHaveViriablesRule"><![CDATA[
+@Service
+public class AvoidGalaxyBeanUtilsCopyRuleTest implements ITest{
+	int a1;
+	boolean a2;
+	String b3;
+	Object o1;
+	@Resource
+	Object o2;
+	@Autowired
+	Object o3;
+	final String st1 = "";
+	static String st2 = "";
+	final static String st3 ;
+
+    public void test(Object source){
+    	int a1;
+		boolean a2;
+		String b3;
+		Object o1;
+    }
+
+    class AvoidGalaxyBeanUtilsCopyRuleTest implements ITest{
+		int a1;
+		boolean a2;
+		String b3;
+		Object o1;
+		@Resource
+		Object o2;
+		@Autowired
+		Object o3;
+		final String st1 = "";
+		static String st2 = "";
+		static String st3 ;
+	}
+		@Resource(name = "ensDateServiceImpl")
+		Object o4;
+		 @Resource(name = "ensDateServiceImpl")
+  		 private IDataPreService dataPreService;
+}
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Spring Service Bean should not contains non final variable.</description>
+		<expected-problems>5</expected-problems>
+		<expected-linenumbers>3,4,5,6,12</expected-linenumbers>
+		<code-ref id="SpringServiceBeanCannotHaveViriablesRule" />
+	</test-code>
+
+
+	<code-fragment id="SpringServiceBeanCannotHaveViriablesRule2"><![CDATA[
+@Component
+@Data
+public class AvoidGalaxyBeanUtilsCopyRuleTest implements ITest{
+	@test
+	String s1;
+	@Resource
+	String s2;
+	@Autowired
+	String s3;
+	final String st1 = "";
+	static String st2 = "";
+	class AvoidGalaxyBeanUtilsCopyRuleTest implements ITest{
+		@test
+		String s1;
+		@Resource
+		String s2;
+		@Autowired
+		String s3;
+		final String st1 = "";
+		static String st2 = "";
+	}
+	 @Controller
+	class SubAvoidGalaxyBeanUtilsCopyRuleTest1 implements ITest{
+		@test
+		String s1;
+		@Resource
+		String s2;
+		@Autowired
+		String s3;
+		final String st1 = "";
+		static String st2 = "";
+	}
+		@Repository
+	class SubAvoidGalaxyBeanUtilsCopyRuleTest2 implements ITest{
+		@test
+		String s1;
+		@Resource
+		String s2;
+		@Autowired
+		String s3;
+		final String st1 = "";
+		static String st2 = "";
+		public method1(){
+			String ss1;
+		}
+	}
+	@Repository
+	class SubAvoidGalaxyBeanUtilsCopyRuleTest2 implements IProductPart{
+		@test
+		String s1;
+		String s2;
+		String s3;
+		final String st1 = "";
+		static String st2 = "";
+		public method1(){
+			String ss1;
+		}
+	}
+
+	public method1(){
+		String ss1;
+	}
+}
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Spring Service Bean should not contains non final variable muti class.</description>
+		<expected-problems>6</expected-problems>
+		<!--混合处理堆栈逆序-->
+		<expected-linenumbers>5,11,25,31,36,42</expected-linenumbers>
+		<code-ref id="SpringServiceBeanCannotHaveViriablesRule2" />
+	</test-code>
+	<code-fragment id="SpringServiceBeanCannotHaveViriablesRule3"><![CDATA[
+		package com.dcits.ensemble.nl.service.mbsdnl;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import com.dcits.ensemble.base.data.EnsRequest;
+import com.dcits.ensemble.business.AbstractService;
+import com.dcits.ensemble.dao.IMbTranControlHistRepository;
+import com.dcits.ensemble.nl.service.api.application.reversal.INlRecReversal;
+import com.dcits.ensemble.nl.service.api.mbsdnl.INl13002301;
+import com.dcits.ensemble.nl.service.model.mbsdnl.Nl13002301In;
+
+/**
+ * @author zhouybd
+ * @Title: Nl13002301
+ * @Package com.dcits.ensemble.nl.service.mbsdnl
+ * @Description: 回收冲正
+ * @date 2018/10/12 10:02
+ * @Version 1.0
+ */
+@Service
+public class Nl13002301 extends AbstractService implements INl13002301 {
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public Class<? extends EnsRequest> getRequestModel() {
+        return Nl13002301In.class;
+    }
+
+    @Resource
+    private IMbTranControlHistRepository mbTranControlHistRepository;
+    @Resource
+    private INlRecReversal nlBaseReversal;
+
+    /**
+     * @param
+     * @return void
+     * @description: 功能描述：冲正主入口
+     * @author renfei
+     * @date 2018/4/9 17:00
+     */
+    public void execute(String reference, String reversalReason) {
+        if (logger.isInfoEnabled()) {
+            logger.info("Core13002301 execute reference: {};reversalReason:{}", reference, reversalReason);
+        }
+        nlBaseReversal.checkModule(reference);
+        nlBaseReversal.reversalModule(reference,reversalReason);
+    }
+}
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Spring Service Bean should not contains non final variable ignore log.</description>
+		<expected-problems>0</expected-problems>
+		<code-ref id="SpringServiceBeanCannotHaveViriablesRule3" />
+	</test-code>
+	<code-fragment id="SpringServiceBeanCannotHaveViriablesRule4"><![CDATA[
+		package com.dcits.ensemble.nl.service.eod.sms;
+
+import com.dcits.ensemble.nl.service.api.application.flow.ISmsOrganization;
+import com.dcits.ensemble.nl.service.model.eod.SmsOrganizationModel;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * 短信明细组织工厂类
+ */
+@Component
+public class SmsOrganizationFactory implements ApplicationContextAware {
+
+    /**
+     * 接口ISmsOrganization实现实例保存Map对象
+     */
+    @SuppressWarnings("AlibabaSpringServiceBeanCannotHaveViriables")
+    private static Map<SmsOrganizationModel, ISmsOrganization> smsOrganizationMap;
+
+    /**
+     * 通过产品类别获取对应流程实现实例
+     *
+     * @param remindType
+     * @return
+     */
+    public static ISmsOrganization getSmsOrganization(String remindType) {
+        SmsOrganizationModel smsOrganizationModel = getSmsOrganizationModel(remindType);
+        return smsOrganizationMap.get(smsOrganizationModel);
+    }
+
+    /**
+     * 通过SmsOrganizationModel枚举类型获取流程实现实例
+     * @param SmsOrganizationModel
+     * @return
+     */
+    public static ISmsOrganization getSmsOrganization(SmsOrganizationModel SmsOrganizationModel) {
+        return smsOrganizationMap.get(SmsOrganizationModel);
+    }
+
+    /**
+     * 通过短信提醒类别获取流程实现对应分类
+     *
+     * @param remindType
+     * BEF
+     * DUE
+     * MAT
+     * YUQ
+     * OWE
+     * @return
+     */
+    private static SmsOrganizationModel getSmsOrganizationModel(String remindType) {
+        switch (remindType) {
+            //联合贷款
+            case "BEF":
+                return SmsOrganizationModel.BEF;
+            case "DUE":
+                return SmsOrganizationModel.DUE;
+            case "MAT":
+                return SmsOrganizationModel.MAT;
+            case "YUQ":
+                return SmsOrganizationModel.YUQ;
+            case "OWE":
+                return SmsOrganizationModel.OWE;
+            case "SUC":
+                return SmsOrganizationModel.SUC;
+            case "FAI":
+                return SmsOrganizationModel.FAI;
+            default:
+                return null;
+        }
+    }
+
+    /**
+     * 通过Spring机制将ISmsOrganization实现加载入Map对象中
+     *
+     * @param applicationContext 系统上下文
+     * @throws
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        Map<String, ISmsOrganization> map = applicationContext.getBeansOfType(ISmsOrganization.class);
+        smsOrganizationMap = new HashMap<>(map.size());
+
+        for (Map.Entry<String, ISmsOrganization> entry : map.entrySet()) {
+            smsOrganizationMap.put((entry.getValue()).getSmsOrganizationModel(), entry.getValue());
+        }
+    }
+}
+
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description>Spring Service Bean should not contains non final variable ignore SuppressWarnings.</description>
+		<expected-problems>0</expected-problems>
+		<code-ref id="SpringServiceBeanCannotHaveViriablesRule4" />
+	</test-code>
+</test-data>

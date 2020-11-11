@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <code-fragment id="AllBooleanPropertyNamingRuleTest">
+        <![CDATA[
+  public class BooleanPropertyNamingRuleTest{
+    private boolean issuccess;
+    private boolean issuccess1;
+    private Boolean issuccess2;
+    private Boolean issuccess3;
+    private boolean success;
+    private Boolean success1;
+    public void sayHello (int i,boolean isFlag1,boolean isFlag2) {
+     boolean issuccess1;
+     Boolean issuccess2;
+     boolean success1;
+     Boolean success2;
+    }
+}
+    ]]>
+    </code-fragment>
+    <test-code>
+        <description>issuccess should not contain is</description>
+        <expected-problems>4</expected-problems>
+        <expected-linenumbers>2,3,4,5</expected-linenumbers>
+        <code-ref id="AllBooleanPropertyNamingRuleTest" />
+    </test-code>
+
+</test-data>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+
+	<code-fragment id="CatchStatmentShouldHaveLogError"><![CDATA[
+	package com.dcits.limarket.busi.common;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.dcits.galaxy.dal.mybatis.exception.NoShardFoundException;
+import com.dcits.limarket.data.dao.IrlFmAcctClientRelationDao;
+import com.dcits.limarket.util.BusiUtil;
+
+public class RouterQuery {
+    private static final Logger logger = LoggerFactory.getLogger(RouterQuery.class);
+
+    @Resource
+    IrlFmAcctClientRelationDao irlFmAcctClientRelationDao;
+
+    public static final String CLIENT_NO = "clientNo";
+
+    public static final String BASE_ACCT_NO = "baseAcctNo";
+
+    public static final String INTERNAL_KEY = "internalKey";
+
+//    private static final String IRL_INTERNAL_KEY = "internalKey";
+
+    public static final String CARD_NO = "cardNo";
+
+    /**
+     * 根据账号，账户主键，卡号，查询对应的客户号（供路由时候使用）
+     *
+     * @param value
+     * @param fieldName
+     * @return
+     */
+    public int routerByClientNo(Object value, String fieldName) {
+        String baseAcctNo = null;
+        Long internalKey = null;
+        String cardNo = null;
+        String clientNo =null;
+
+        if (BusiUtil.isNull(value)) {
+            if(logger.isErrorEnabled()){
+                logger.error("路由计算失败!!!");
+            }
+            throw new NoShardFoundException("路由计算失败!!!");
+        }
+
+        if (CLIENT_NO.equals(fieldName)) {
+                clientNo = value.toString();
+        }else{
+            switch (fieldName) {
+                case BASE_ACCT_NO:
+                        baseAcctNo = value.toString();
+                    break;
+                case INTERNAL_KEY:
+                        internalKey = Long.valueOf(value.toString());
+                    break;
+//                case IRL_INTERNAL_KEY:
+//                	String val = StringUtil.ObjectToString(value);
+//                	if (val.length() >= 2) {
+//                		val = val.substring(2);
+//                	}
+//                	internalKey = Long.valueOf(val);
+//                break;
+                case CARD_NO:
+                        cardNo = value.toString();
+                    break;
+                default:
+                    if(logger.isErrorEnabled()){
+                        logger.error("路由计算失败!!!");
+                    }
+                    throw new NoShardFoundException("路由计算失败!!!");
+            }
+
+            try{
+                clientNo = irlFmAcctClientRelationDao.getClientNo(
+                        baseAcctNo, internalKey, cardNo);
+                if (BusiUtil.isNull(clientNo)) {
+                    if(logger.isErrorEnabled()){
+                    	logger.error("internalKey = "+ internalKey);
+                        logger.error("路由计算失败!!!");
+
+                    }
+                    throw new NoShardFoundException("路由计算失败!!!");
+                }
+            }catch(Exception e){
+                if (logger.isErrorEnabled()) {
+                    logger.error("internalKey = "+ internalKey);
+                    logger.error("999999", e);
+                }
+                throw new NoShardFoundException("路由计算失败!!!");
+            }
+	     try{
+                clientNo = irlFmAcctClientRelationDao.getClientNo(
+                        baseAcctNo, internalKey, cardNo);
+                if (BusiUtil.isNull(clientNo)) {
+                    if(logger.isErrorEnabled()){
+                    	logger.error("internalKey = "+ internalKey);
+                        logger.error("路由计算失败!!!");
+
+                    }
+                    throw new NoShardFoundException("路由计算失败!!!");
+                }
+            }catch(Exception e){
+                throw new NoShardFoundException("路由计算失败!!!");
+            }
+
+        }
+
+
+        return mod(cutLast2(clientNo),2);
+    }
+}
+
+    ]]>
+	</code-fragment>
+
+	<test-code>
+		<description> Catch Statement Block Should Use logger.error To Output Error Stack And Needed Business Detail.</description>
+		<expected-problems>1</expected-problems>
+		<expected-linenumbers>104</expected-linenumbers>
+		<code-ref id="CatchStatmentShouldHaveLogError" />
+	</test-code>
+
+</test-data>

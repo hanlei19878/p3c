@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<ruleset name="DcJavaNaming" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>DcJavaComments</description>
+    <rule name="InterfaceShouldBeCamelAndPrefixRule"
+          language="java"
+          since="1.6"
+          message="java.naming.InterfaceShouldBeCamelAndPrefixRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.naming.InterfaceShouldBeCamelAndPrefixRule">
+        <description>com.alibaba.p3c.pmd.lang.java.dc.rule.naming.InterfaceShouldBeCamelAndPrefixRule.desc</description>
+        <priority>3</priority>
+    </rule>
+    <rule name="DaoImplShouldNotImplBaseDaoRule"
+          language="java"
+          since="1.6"
+          message="java.naming.dc.DaoImplShouldNotImplBaseDaoRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.naming.DaoImplShouldNotImplBaseDaoRule">
+        <description>com.alibaba.p3c.pmd.lang.java.dc.rule.naming.DaoImplShouldNotImplBaseDaoRule.desc</description>
+        <priority>1</priority>
+    </rule>
+    <rule name="AllBooleanPropertyShouldNotStartWithIsRule"
+          language="java"
+          since="1.6"
+          message="java.naming.dc.AllBooleanPropertyShouldNotStartWithIsRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.naming.AllBooleanPropertyShouldNotStartWithIsRule">
+        <description>com.alibaba.p3c.pmd.lang.java.dc.rule.naming.AllBooleanPropertyShouldNotStartWithIsRule.desc</description>
+        <priority>3</priority>
+        <example>
+            <![CDATA[
+    public class DemoDO{
+        boolean success;
+        boolean delete;
+    }
+            ]]>
+        </example>
+    </rule>
+    <rule name="GalaxyServiceMethodNameNotOverrideRule"
+          language="java"
+          since="1.6"
+          message="java.naming.dc.GalaxyServiceMethodNameNotOverrideRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.java.dc.rule.naming.GalaxyServiceMethodNameNotOverrideRule">
+        <description>com.alibaba.p3c.pmd.lang.java.dc.rule.naming.GalaxyServiceMethodNameNotOverrideRule.desc</description>
+        <priority>1</priority>
+        <example>
+            <![CDATA[
+            Galaxy框架服务接口不允许重载如下方法：
+        beforeProcess,afterProcess,clearMDC,setBusinessEngine,getBusinessEngine,
+        process,innerProcess,asyncInnerProcess,subProcess,execProcess
+            ]]>
+        </example>
+    </rule>
+</ruleset>
