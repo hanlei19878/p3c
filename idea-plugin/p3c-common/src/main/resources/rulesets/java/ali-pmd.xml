@@ -5,9 +5,13 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
 
     <rule ref="rulesets/java/ali-concurrent.xml"/>
-    <rule ref="rulesets/java/ali-comment.xml"/>
+    <rule ref="rulesets/java/ali-comment.xml">
+        <exclude name="CommentsMustBeJavadocFormatRule"/>
+    </rule>
+
     <rule ref="rulesets/java/ali-naming.xml">
         <exclude name="ArrayNamingShouldHaveBracketRule"/>
+        <exclude name="BooleanPropertyShouldNotStartWithIsRule"/>
     </rule>
     <rule ref="rulesets/java/ali-constant.xml">
         <exclude name="UpperEllRule"/>
@@ -18,9 +22,26 @@
     <rule ref="rulesets/java/ali-oop.xml">
         <exclude name="EqualsAvoidNullRule"/>
         <exclude name="WrapperTypeEqualityRule"/>
+        <exclude name="PojoMustUsePrimitiveFieldRule"/>
+        <exclude name="PojoNoDefaultValueRule"/>
+        <exclude name="PojoMustOverrideToStringRule"/>
     </rule>
     <rule ref="rulesets/java/ali-set.xml"/>
     <rule ref="rulesets/java/ali-flowcontrol.xml">
         <exclude name="NeedBraceRule"/>
+    </rule>
+    <rule ref="rulesets/java/dc-naming.xml"/>
+    <rule ref="rulesets/java/dc-flowcontrol.xml"/>
+    <rule ref="rulesets/java/dc-other.xml"/>
+    <rule ref="rulesets/java/dc-spring.xml">
+        <exclude name="SpringTransactionRollBackForRule"/>
+        <exclude name="SpringServiceBeanCannotHaveViriablesRule"/>
+
+    </rule>
+    <rule ref="rulesets/java/dc-exception.xml">
+        <exclude name="CatchStatmentShouldHaveLogError"/>
+    </rule>
+    <rule ref="rulesets/java/dc-doc.xml">
+        <exclude name="DcCommentRequiredRule"/>
     </rule>
 </ruleset>

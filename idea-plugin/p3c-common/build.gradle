@@ -1,5 +1,7 @@
 plugins {
-    id "org.jetbrains.intellij" version '0.4.5'
+    id 'java'
+    id "org.jetbrains.intellij" version '0.4.21'
+    id 'maven'
 }
 apply plugin: 'kotlin'
 apply plugin: 'idea'
@@ -45,9 +47,10 @@ version '2.0.1'
 ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 dependencies {
-    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.25-incubating'
-    compile 'com.alibaba.p3c:p3c-pmd:2.1.0'
-    compile group: 'org.javassist', name: 'javassist', version: '3.21.0-GA'
+    compile group: 'org.freemarker', name: 'freemarker', version: '2.3.30'
+    compile 'com.alibaba.p3c:p3c-pmd:2.1.1'
+    compile group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 uploadArchives {
@@ -67,11 +70,11 @@ uploadArchives {
                 name 'p3c-common'
                 packaging 'jar'
                 description 'P3c Idea Plugin Common.'
-                url 'https://github.com/alibaba/p3c'
+                url 'https://github.com/hanlei19878/p3c'
 
                 scm {
-                    url 'https://github.com/alibaba/p3c'
-                    connection 'scm:git:https://git@github.com/alibaba/p3c.git'
+                    url 'https://github.com/hanlei19878/p3c'
+                    connection 'scm:git:https://git@github.com/hanlei19878/p3c.git'
                 }
 
                 licenses {

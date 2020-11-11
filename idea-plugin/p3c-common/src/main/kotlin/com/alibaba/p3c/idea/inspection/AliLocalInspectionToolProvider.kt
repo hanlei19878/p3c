@@ -16,6 +16,7 @@
 package com.alibaba.p3c.idea.inspection
 
 import com.alibaba.p3c.idea.config.P3cConfig
+import com.alibaba.p3c.idea.inspection.dc.*
 import com.alibaba.p3c.idea.inspection.standalone.AliAccessStaticViaInstanceInspection
 import com.alibaba.p3c.idea.inspection.standalone.AliDeprecationInspection
 import com.alibaba.p3c.idea.inspection.standalone.AliMissingOverrideAnnotationInspection
@@ -76,11 +77,18 @@ class AliLocalInspectionToolProvider : InspectionToolProvider {
             AliAccessStaticViaInstanceInspection::class.java,
             AliDeprecationInspection::class.java,
             MapOrSetKeyShouldOverrideHashCodeEqualsInspection::class.java,
-            AliArrayNamingShouldHaveBracketInspection::class.java,
-            AliControlFlowStatementWithoutBracesInspection::class.java,
-            AliEqualsAvoidNullInspection::class.java,
-            AliLongLiteralsEndingWithLowercaseLInspection::class.java,
-            AliWrapperTypeEqualityInspection::class.java
+                AliArrayNamingShouldHaveBracketInspection::class.java,
+                AliControlFlowStatementWithoutBracesInspection::class.java,
+                AliEqualsAvoidNullInspection::class.java,
+                AliLongLiteralsEndingWithLowercaseLInspection::class.java,
+                AliWrapperTypeEqualityInspection::class.java,
+                DcMissingJavaDocInspection::class.java,
+                DcSpringTransactionRollBackInspection::class.java,
+                DcSpringServiceBeanCannotHaveViriablesInspection::class.java,
+                DcPublicVariableWithoutFinalModifierInspection::class.java,
+                DcNonJavaDocInspection::class.java,
+                DcCatchStatmentShouldHaveLogInspection::class.java,
+                DcLogNonBuiltInStringFormattingInspection::class.java
         )
         val javaShouldInspectChecker = object : ShouldInspectChecker {
             override fun shouldInspect(file: PsiFile): Boolean {

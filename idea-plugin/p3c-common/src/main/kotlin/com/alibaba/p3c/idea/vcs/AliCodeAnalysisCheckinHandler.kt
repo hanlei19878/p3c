@@ -67,7 +67,7 @@ class AliCodeAnalysisCheckinHandler(
     private val myProject: Project,
     private val myCheckinPanel: CheckinProjectPanel
 ) : CheckinHandler() {
-    private val dialogTitle = "Alibaba Code Analyze"
+    private val dialogTitle = "DC Code Analyze"
     private val cancelText = "&Cancel"
     private val commitText = "&Commit Anyway"
     private val waitingText = "Wait"
@@ -75,7 +75,7 @@ class AliCodeAnalysisCheckinHandler(
     val log = Logger.getInstance(javaClass)
 
     override fun getBeforeCheckinConfigurationPanel(): RefreshableOnComponent? {
-        val checkBox = NonFocusableCheckBox("Alibaba Code Guidelines")
+        val checkBox = NonFocusableCheckBox("DC Code Guidelines")
         return object : RefreshableOnComponent {
             override fun getComponent(): JComponent {
                 val panel = JPanel(BorderLayout())

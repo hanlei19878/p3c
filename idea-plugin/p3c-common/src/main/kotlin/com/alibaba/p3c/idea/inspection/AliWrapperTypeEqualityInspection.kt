@@ -114,6 +114,7 @@ class AliWrapperTypeEqualityInspection : BaseInspection, AliBaseInspection {
             }
             return TypeUtils.expressionHasTypeOrSubtype(expression, CommonClassNames.JAVA_LANG_BOOLEAN)
                 || TypeUtils.expressionHasTypeOrSubtype(expression, CommonClassNames.JAVA_LANG_CHARACTER)
+                    || TypeUtils.expressionHasTypeOrSubtype(expression, CommonClassNames.JAVA_LANG_STRING)
         }
 
         private fun hasNumberType(expression: PsiExpression): Boolean {

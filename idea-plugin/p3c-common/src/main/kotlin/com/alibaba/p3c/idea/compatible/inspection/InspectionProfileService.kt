@@ -49,21 +49,21 @@ object InspectionProfileService {
             in PluginVersions.baseVersion171..Int.MAX_VALUE -> {
                 val clz = Class.forName("com.intellij.codeInspection.ex.InspectionProfileKt")
                 val method = clz.methods.first { it.name == "createSimple" }
-                method.invoke(null, "Alibaba Coding Guidelines", managerEx.project, allWrappers.toList())
+                method.invoke(null, "DC Coding Guidelines", managerEx.project, allWrappers.toList())
                         as InspectionProfileImpl
             }
             PluginVersions.baseVersion163 -> {
                 val method = profile.javaClass.methods.first {
                     it.name == "createSimple"
                 }
-                method.invoke(null, "Alibaba Coding Guidelines", managerEx.project, allWrappers.toList())
+                method.invoke(null, "DC Coding Guidelines", managerEx.project, allWrappers.toList())
                         as InspectionProfileImpl
             }
             else -> {
                 val method = profile.javaClass.methods.first {
                     it.name == "createSimple"
                 }
-                method.invoke(null, "Alibaba Coding Guidelines", managerEx.project, allWrappers.toTypedArray())
+                method.invoke(null, "DC Coding Guidelines", managerEx.project, allWrappers.toTypedArray())
                         as InspectionProfileImpl
             }
         }
@@ -89,7 +89,7 @@ object InspectionProfileService {
         val shortNames = aliInspections.map {
             it.tool.shortName
         }
-        profile.removeScopes(shortNames, "AlibabaCodeAnalysis", project)
+        profile.removeScopes(shortNames, "DC Code Analysis", project)
         val method = profile.javaClass.methods.first {
             it.name == if (closed) {
                 "enableToolsByDefault"

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="com.alibaba.p3c.analytics.action_group.text">Alibaba Coding Guidelines</entry>
+    <entry key="com.alibaba.p3c.analytics.action_group.text">DC Coding Guidelines</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_zh">Switch language to English</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_en">Switch language to Chinese</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.success">
         <![CDATA[Switch language success，<a href="restart">restart</a> to get effect.]]></entry>
-    <entry key="com.alibaba.p3c.idea.action.AliInspectionAction.text">Alibaba Coding Guidelines Analyze</entry>
+    <entry key="com.alibaba.p3c.idea.action.AliInspectionAction.text">DC Coding Guidelines Analyze</entry>
     <entry key="com.alibaba.p3c.idea.action.ToggleProjectInspectionAction.text.close">Close inspection on the fly
     </entry>
     <entry key="com.alibaba.p3c.idea.action.ToggleProjectInspectionAction.text.open">Open inspection on the fly</entry>
@@ -103,4 +103,42 @@ Note: String can be used as the key of Map since these two methods have been rew
 </body>
 </html>
 ]]></entry>
+    <entry key="com.dc.p3c.idea.quickfix.generate.javaDoc">Add JavaDoc Template</entry>
+    <entry key="com.dc.p3c.idea.quickfix.generate.javaDoc.update">Add JavaDoc Template From NonDoc Comment</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.message">Class Or Method Should Have Comment As JavaDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.desc">ALL Class And Public Method Should Have Comment As JavaDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.errMsg">Class Or Method Should Have Comment As JavaDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.fix">Add JavaDoc Template</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.update.fix">Add JavaDoc Template From NonDoc Comment</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.message">New Transactional Annotation Should Be With "rollbackFor = {Exception.class,Error.class}" Attribute。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.desc">New Transactional Annotation Should Be With "rollbackFor = {Exception.class,Error.class}" Attribute。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.errMsg">New Transactional Annotation Should Be With "rollbackFor = {Exception.class,Error.class}" Attribute。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.fix">Add Annotation "rollbackFor = {Exception.class,Error.class}" Attribute。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.message"><![CDATA[Spring Service Bean should not contains non final variable. Unsafe!!!!]]></entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.desc"><![CDATA[Spring Service Bean should not contains non final variable. Unsafe!!!!]]></entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.errMsg"><![CDATA[Spring Service Bean should not contains non final variable.]]></entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.fix">Add "static final" Key Word</entry>
+
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.message">Public Variable Without Final Modifier</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.desc">Implement The Rule "CWE-493 - Critical Public Variable Without Final Modifier" In Sonar,Add Auto Fix.</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.errMsg">Make [%s] a static final constant or non-public and provide accessors if needed.</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.StaticFinal.fix">Modify Filed To Static Final</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.Private.fix">Modify Filed To Private</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.Protected.fix">Modify Filed To Protected</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.message">Comment Is NonDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.desc">Comment Is NonDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.errMsg">[#ref]Comment Is NonDoc Style</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.fix">Fix With JavaDoc Template</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.message">Exception handlers should preserve the original exceptions</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.desc">Exception handlers should preserve the original exceptions</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.errMsg">Either log or rethrow this exception</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.debug.fix">Add Debug Log</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.info.fix">Add Info Log</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.warn.fix">Add Warn Log</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.error.fix">Add Error Log</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.message">Use the built-in formatting to construct this argument.</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.desc">Use the built-in formatting to construct this argument.</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.errMsg">Use the built-in formatting to construct this argument.</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.UseBuildIn.fix">Use the built-in formatting</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.UseEnabled.fix">Add Enabled Switch</entry>
 </properties>

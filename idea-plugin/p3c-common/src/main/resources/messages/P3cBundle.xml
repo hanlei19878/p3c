@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 <properties>
-    <entry key="com.alibaba.p3c.analytics.action_group.text">阿里编码规约</entry>
+    <entry key="com.alibaba.p3c.analytics.action_group.text">编码规约</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_zh">切换语言至英文(English)</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_en">切换语言至中文</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.success">
@@ -56,7 +56,7 @@
     <entry key="com.alibaba.p3c.idea.inspection.rule.AliLongLiteralsEndingWithLowercaseL.errMsg">
         <![CDATA['long' 型常量 <code>#ref</code> 应该以大写L结尾 #loc]]></entry>
     <entry key="com.alibaba.p3c.idea.inspection.rule.WrapperTypeEqualityRule.errMsg">
-        <![CDATA[包装类型间的相等判断应该用equals，而不是<code>#ref</code> #loc]]></entry>
+        <![CDATA[包装/String类型间的相等判断应该用equals，而不是<code>#ref</code> #loc]]></entry>
 
     <entry key="com.alibaba.p3c.idea.inspection.standalone.AliAccessStaticViaInstanceInspection.desc"><![CDATA[
 <html>
@@ -93,4 +93,57 @@ Map/Set的key为自定义对象时，必须重写hashCode和equals。<br>
 </body>
 </html>
 ]]></entry>
+    <entry key="com.dc.p3c.idea.quickfix.generate.javaDoc">添加JavaDoc模板</entry>
+    <entry key="com.dc.p3c.idea.quickfix.generate.javaDoc.update">通过现有注释，添加JavaDoc模板</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.message">类或方法缺少JavaDoc形式注释</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.desc">所有类及方法必须有JavaDoc形式注释，小于三行(含)除外</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.errMsg">[#ref]缺少JavaDoc形式注释</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.fix">添加JavaDoc模板</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.MissingJavaDocInspection.update.fix">通过现有注释，添加JavaDoc模板</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.message">新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.desc">
+        对于使用小事务的注解统一使用如下注解方式
+        @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {Exception.class,Error.class})
+        原因：Spring 事务注解管理机制只自动回滚Error和RuntimeException异常。
+        实际应用过程中会由于实现原因引入三方包或文件操作等非一般业务逻辑实现，其抛出异常为自定义异常，非RuntimeException继承实现。
+        有可能导致事务无法回滚，造成数据库脏数据。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.errMsg">新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringTransactionRollBackInspection.fix">增加Exception.class与Error.class的rollbackFor属性</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.message">Spring Bean对象禁止使用类内部变量(final 变量除外)。Spring容器存放的是单实例对象，多线程运行的时候，线程不安全。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.desc"> <![CDATA[
+    Spring Bean对象禁止使用类内部变量(final 变量除外)。Spring容器存放的是单实例对象，多线程运行的时候，线程不安全。
+    禁止在Bean中定义String、Long、Integer、Boolean 、BigDecimal、List、Map、HashMap、ArrayList
+    、double、float、short、boolean、int或其他业务模型Bean等类型的全局变量，
+    这些全局变量由于不是线程安全的，在高并发时，全局变量容易发生线程间串值的问题，从而导致错误逻辑。
+
+    排除: Logger类型变量;
+          以Factory结尾并实现ApplicationContextAware或ApplicationListener的工厂类
+            ]]></entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.errMsg">Spring Bean对象禁止使用类内部变量(final 变量除外)。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.SpringServiceBeanCannotHaveViriablesInspection.fix">增加static final关键字</entry>
+
+
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.message">类中不应存在非final属性的public字段。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.desc">实现声呐扫描CWE-493 - Critical Public Variable Without Final Modifier 规则，并增加一键修复功能。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.errMsg">[%s]应该为static final属性或修改为非public字段。</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.StaticFinal.fix">增加static final属性</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.Private.fix">访问域修改为private</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.PublicVariableWithoutFinalModifierInspection.Protected.fix">访问域修改为protected</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.message">非JavaDoc形式注释</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.desc">非JavaDoc形式注释</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.errMsg">[#ref]非JavaDoc形式注释</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.NonJavaDocInspection.fix">替换为JavaDoc模板</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.message">异常信息应该进行日志输出或重新抛出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.desc">异常信息应该进行日志输出或重新抛出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.errMsg">异常应该进行日志输出或重新抛出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.debug.fix">增加debug输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.info.fix">增加info输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.warn.fix">增加warn输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.CatchStatmentShouldHaveLogInspection.error.fix">增加error输出</entry>
+
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.message">使用内置函数格式化Log输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.desc">使用内置函数格式化Log输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.errMsg">使用内置函数格式化Log输出</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.UseBuildIn.fix">修改为内置函数</entry>
+    <entry key="com.alibaba.p3c.idea.inspection.dc.LogNonBuiltInStringFormattingInspection.UseEnabled.fix">增加Enabled判定</entry>
 </properties>

@@ -6,7 +6,8 @@ buildscript {
         maven {
             url 'http://dl.bintray.com/jetbrains/intellij-plugin-service'
         }
-        mavenCentral()
+         mavenCentral()
+	 flatDir(dirs: 'lib')
 
     }
     dependencies {
@@ -27,6 +28,7 @@ allprojects {
     }
     repositories {
         jcenter()
+        mavenLocal()
         mavenCentral()
     }
 

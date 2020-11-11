@@ -45,7 +45,7 @@ interface AliQuickFix : LocalQuickFix {
     }
 
     companion object {
-        const val groupName = "Ali QuickFix"
+        const val groupName = "Dc QuickFix"
 
         fun doQuickFix(newIdentifier: String, project: Project, psiIdentifier: PsiIdentifier) {
             val offset = psiIdentifier.textOffset

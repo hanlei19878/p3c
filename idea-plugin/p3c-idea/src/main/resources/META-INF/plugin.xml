@@ -5,6 +5,103 @@
 
     <change-notes>
         <![CDATA[
+        <ul>DC-0.0.5
+            <li>更新日期：2019-11-11</li>
+            <li>feat：</li>
+            <li>1. 合并p3c最新版本。</li>
+
+        </ul>
+         <ul>DC-0.0.4
+            <li>更新日期：2019-10-09</li>
+            <li>add：</li>
+            <li>1. 非JavaDoc格式注释，提供自动修正（类中无用代码注释会引起注释内容错误）。</li>
+            <li>2. 异常信息应该进行日志输出或重新抛出，提供自动修正（Sonar CERT, ERR00-J. - Do not suppress or ignore checked exceptions）。<br/>
+                   存在误报，只识别org.slf4j.Logger日志实现类，如用其他实现类，自动修正后会编译报错。</li>
+            <li>3. 使用内置函数格式化Log输出（Sonar squid:S2629 "Preconditions" and logging arguments should not require evaluation）<br/>
+                   提供增加enabled判定语句自动修正。<br/>
+                   提供内置函数修改功能（只支持单字符串拼接格式修改）。</li>
+            <li>delete：</li>
+            <li>1. 删除阿里规则CommentsMustBeJavadocFormatRule。</li>
+            <li>2. 删除DC规则异常捕获类中必须有error日志进行堆栈输出。</li>
+            <li>fix：</li>
+            <li>1. Spring Bean对象禁止使用类内部变量(final 变量除外)规则误报5.30版本指标类，与声呐扫描规则同步。自动修正改为 static final。</li>
+            <li>2. JavaDoc模板增加对于void方法有return注释问题修复。</li>
+        </ul>
+        <ul>DC-0.0.3
+            <li>更新日期：2019-08-23</li>
+            <li>add：</li>
+            <li>1. 增加声呐扫描CWE-493 - Critical Public Variable Without Final Modifier 规则实现，并增加一键修复功能。</li>
+        </ul>
+         <ul>DC-0.0.2
+            <li>更新日期：2019-07-16</li>
+            <li>fix：</li>
+            <li>1. Spring Bean对象禁止使用类内部变量(final 变量除外)规则扫描父类属性抛出空指针异常,增加ThreadLocal识别。</li>
+        </ul>
+         <ul>DC-0.0.1
+            <li>更新日期：2019-06-21</li>
+            <li>新增规则：</li>
+            <li>1.  所有类及public方法必须有JavaDoc形式注释。</li>
+            <li>    带有JavaDoc模板修正功能；</li>
+            <li>    可通过环境变量中配置USER变量对模板带出的名称进行调整（手动完全关闭，启动后生效）；</li>
+            <li>修改规则：</li>
+            <li>1.  Galaxy框架服务接口不允许重载方法。（增加按Override注解识别，减少误报）</li>
+            <li>2.  新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。</li>
+            <li>    修改实现方式，增加修正功能</li>
+            <li>3.  Spring Bean对象禁止使用类内部变量(final 变量除外)</li>
+            <li>    修改实现方式，增加修正功能</li>
+            <li>删除规则：</li>
+            <li>1.  方法缺少JavaDoc形式的注释</li>
+            <li>修改插件：</li>
+            <li>1.  不再延续Ali版本号与命名</li>
+        </ul>
+
+        <ul>1.3.6.dc-190516-bate2
+            <li>添加规则：</li>
+            <li>新事务注解【Propagation.REQUIRES_NEW】必须增加Exception.class与Error.class的rollbackFor属性。</li>
+            <li>修改规则：</li>
+            <li>有的包装类对象之间值的比较，全部使用equals方法比较。添加String类型支持。</li>
+            <li>新Spring的事务在以下情况不会生效。增加this标志符识别。</li>
+        </ul>
+        <ul>1.3.6.dc-190516-bate1
+            <li>添加规则：</li>
+            <li>异常捕获类中必须有error日志输出。</li>
+            <li>修改规则：</li>
+            <li>Spring的事务在以下情况不会生效。支持类内部方法调用检查。</li>
+            <li>Spring Bean对象禁止使用类变量。取消Logger变量检查，增加工厂类SuppressWarnings支持。错误级别为强制。</li>
+            <li>修改业务异常抛错时必须使用错误码，错误级别为强制</li>
+            <li>修改创建BigDecimal对象时，使用参数为String的构造方法（部分识别）。错误级别为建议。</li>
+             <li>Galaxy框架服务接口不允许重载(同名)框架内部方法名。错误级别为强制</li>
+        </ul>
+         <ul>1.3.6.dc-190311-bate1
+            <li>添加规则：</li>
+            <li>方法【%s】的注解【Transactional】在Spring框架中不会产生作用</li>
+            <li>日志判定if分支中不应存在业务处理代码</li>
+            <li>创建BigDecimal对象时，使用参数为String的构造方法（部分识别）</li>
+            <li>业务异常抛错时必须使用错误码（直接使用识别）</li>
+            <li>禁用System.out.println()</li>
+            <li>异常处理不允许使用e.printStackTrace()，使用logger输出错误堆栈。</li>
+            <li>禁止Dao类直接继承自com.dcits.orion.core.dao.BaseDao。</li>
+            <li>非private方法需要添加JavaDoc形式的注释。</li>
+            <li>删除规则：</li>
+            <li>POJO类中的任何布尔类型的变量，都不要加is，否则部分框架解析会引起序列化错误</li>
+            <li>POJO类中的字段【%s】应使用包装类型</li>
+            <li>POJO类中的字段【%s】不应该加默认值</li>
+            <li>POJO类【%s】没有写toString方法</li>
+        </ul>
+        <ul>1.3.6.dc-190307-SNAPSHOT
+            <li>添加规则：</li>
+            <li>接口类名应以I为前缀，其后命名使用UpperCamelCase风格，必须遵从驼峰形式</li>
+            <li>避免用Galaxy BeanUtils的方法copy/copyByClass/listCopyByClass/listCopy进行属性拷贝。</li>
+            <li>布尔字段不要加is前缀</li>
+            <li>Galaxy框架服务接口不允许重载内部方法</li>
+            <li>Spring Bean对象禁止使用类变量</li>
+        </ul>
+         <ul>1.3.6.dc-190305-SNAPSHOT
+            <li>版本引自https://github.com/alibaba/p3c</li>
+            <li>将p3c-pmd纳入idea-plugin中，统一编译处理</li>
+            <li>修改规约：方法最大行数为200</li>
+            <li>修改插件名称为：DC Java Coding Guidelines</li>
+        </ul>
          <ul>
         2.1.0
         <li>Fix idea 2020.2 Ultimate compatibility issue</li>
@@ -83,7 +180,7 @@
         ]]>
     </change-notes>
     <vendor>alibaba</vendor>
-    <version>2.0.0</version>
+    <version>DC-0.0.5</version>
     <idea-version since-build="183.4284"/>
     <depends optional="true">com.intellij.velocity</depends>
     <depends optional="true" config-file="p3c.xml">com.intellij.modules.java</depends>
