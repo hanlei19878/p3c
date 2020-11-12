@@ -1,14 +1,14 @@
 <idea-plugin>
-    <id>com.alibaba.p3c.smartfox</id>
-    <name>Alibaba Java Coding Guidelines</name>
-    <description>Alibaba Java Coding Guidelines plugin support.</description>
+    <id>com.alibaba.p3c.smartfox.dc</id>
+    <name>DC Java Coding Guidelines</name>
+    <description>DC Java Coding Guidelines plugin support.</description>
 
     <change-notes>
         <![CDATA[
         <ul>DC-0.0.5
             <li>更新日期：2019-11-11</li>
             <li>feat：</li>
-            <li>1. 合并p3c最新版本。</li>
+            <li>1. 合并p3c最新版本2.1.0。</li>
 
         </ul>
          <ul>DC-0.0.4
@@ -179,7 +179,7 @@
         </ul>
         ]]>
     </change-notes>
-    <vendor>alibaba</vendor>
+    <vendor>hanleia</vendor>
     <version>DC-0.0.5</version>
     <idea-version since-build="183.4284"/>
     <depends optional="true">com.intellij.velocity</depends>

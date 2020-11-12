@@ -6,8 +6,8 @@
 
 对应版本号
 
-p3c-pmd-1.3.6
-idea-plugin-1.0.6
+p3c-pmd-2.1.0
+idea-plugin-2.1.0
 eclipse-plugin-1.0.6
 
 *eclipse-plugin不维护*
