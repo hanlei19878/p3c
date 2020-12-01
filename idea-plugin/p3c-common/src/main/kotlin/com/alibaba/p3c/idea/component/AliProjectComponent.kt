@@ -47,7 +47,7 @@ class AliProjectComponent(
     private val listener: VirtualFileListener
     private val javaExtension = ".java"
     private val velocityExtension = ".vm"
-
+    private val xmlExtension = ".xml"
     private val lock = ReentrantReadWriteLock()
     private val readLock = lock.readLock()
     private val writeLock = lock.writeLock()
@@ -89,7 +89,7 @@ class AliProjectComponent(
 
             private fun getFilePath(event: VirtualFileEvent): String? {
                 val path = event.file.canonicalPath
-                if (path == null || !(path.endsWith(javaExtension) || path.endsWith(velocityExtension))) {
+                if (path == null || !(path.endsWith(javaExtension) || path.endsWith(velocityExtension) || path.endsWith(xmlExtension))) {
                     return null
                 }
                 return path

@@ -117,7 +117,7 @@ class PmdGlobalInspectionContextImpl(
                             return@tryRunReadActionInSmartMode true
                         }
                         val path = virtualFile.canonicalPath?.toLowerCase() ?: ""
-                        if (!path.endsWith(".java") && !path.endsWith(".vm")) {
+                        if (!path.endsWith(".java") && !path.endsWith(".vm")&& !path.endsWith(".xml")) {
                             return@tryRunReadActionInSmartMode true
                         }
                         doPmdProcess(file, aliProjectComponent, virtualFile)

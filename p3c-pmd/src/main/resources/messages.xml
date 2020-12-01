@@ -687,7 +687,7 @@
     <entry key="xml.mybatis.dc.NoSelectColumnsRule.rule.msg">
         <![CDATA[数据库查询不允许"Select * "。]]>
     </entry>
-    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc">
+    <entry key="com.alibaba.p3c.pmd.lang.xml.rule.mybatis.NoSelectColumnsRule.desc">
         <![CDATA[
             数据库查询应使用具体字段，不应使用"*"获取全部列。
         ]]>

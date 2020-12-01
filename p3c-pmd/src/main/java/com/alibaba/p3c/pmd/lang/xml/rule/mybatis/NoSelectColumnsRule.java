@@ -9,7 +9,7 @@ public class NoSelectColumnsRule extends AbstractMybatisRule {
 
     @Override
     public void visitSelect(XmlNode node, Element element, RuleContext ctx) {
-        if(node.getNode().getTextContent().contains("*")){
+        if(node.getNode().getTextContent().toLowerCase().split("(select){1}[\r\n\t ]*[*]{1}").length>1){
             addViolationWithMessage(ctx, node, MESSAGE_KEY_PREFIX, new String[]{element.getAttribute("id")});
         }
     }

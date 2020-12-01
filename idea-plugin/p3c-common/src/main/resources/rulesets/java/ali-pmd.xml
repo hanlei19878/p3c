@@ -3,7 +3,7 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="alibaba-pmd"
          xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
-
+    <description>java</description>
     <rule ref="rulesets/java/ali-concurrent.xml"/>
     <rule ref="rulesets/java/ali-comment.xml">
         <exclude name="CommentsMustBeJavadocFormatRule"/>
@@ -43,5 +43,7 @@
     </rule>
     <rule ref="rulesets/java/dc-doc.xml">
         <exclude name="DcCommentRequiredRule"/>
+    </rule>
+    <rule ref="rulesets/xml/dc-mybatis.xml">
     </rule>
 </ruleset>

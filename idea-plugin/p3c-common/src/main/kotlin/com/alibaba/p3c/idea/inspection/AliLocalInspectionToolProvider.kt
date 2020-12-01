@@ -180,6 +180,13 @@ class AliLocalInspectionToolProvider : InspectionToolProvider {
                     return path != null && path.endsWith(".vm")
                 }
             }))
+            result.addAll(processForRuleSet("xml/dc-other", object : ShouldInspectChecker {
+                override fun shouldInspect(file: PsiFile): Boolean {
+                    val virtualFile = file.virtualFile ?: return false
+                    val path = virtualFile.canonicalPath
+                    return path != null && path.endsWith(".xml")
+                }
+            }))
             return result
         }
 

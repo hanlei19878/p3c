@@ -686,7 +686,7 @@ Note: Not use methods :
     <entry key="xml.mybatis.dc.NoSelectColumnsRule.rule.msg">
         <![CDATA[Can't Use 'Select *' To Query Table.]]>
     </entry>
-    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc">
+    <entry key="com.alibaba.p3c.pmd.lang.xml.rule.mybatis.NoSelectColumnsRule.desc">
         <![CDATA[
             Use Columns List Instead Of.
         ]]>
