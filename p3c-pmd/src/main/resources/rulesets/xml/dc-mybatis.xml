@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<ruleset name="DcMybatisRules" xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>NoSelectColumnsRule</description>
+    <rule name="NoSelectColumnsRule" language="xml"
+          message="xml.mybatis.dc.NoSelectColumnsRule.rule.msg"
+          class="com.alibaba.p3c.pmd.lang.xml.rule.mybatis.NoSelectColumnsRule">
+        <description>com.alibaba.p3c.pmd.lang.xml.rule.mybatis.NoSelectColumnsRule.desc</description>
+        <priority>2</priority>
+    </rule>
+</ruleset>

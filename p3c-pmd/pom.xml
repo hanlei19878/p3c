@@ -57,6 +57,11 @@
     </dependency>
     <dependency>
       <groupId>net.sourceforge.pmd</groupId>
+      <artifactId>pmd-xml</artifactId>
+      <version>${pmd.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.pmd</groupId>
       <artifactId>pmd-vm</artifactId>
       <version>${pmd.version}</version>
     </dependency>
@@ -104,6 +109,7 @@
             <ruleset>rulesets/java/dc-naming.xml</ruleset>
             <ruleset>rulesets/java/dc-exception.xml</ruleset>
             <ruleset>rulesets/java/dc-spring.xml</ruleset>
+            <ruleset>rulesets/xml/dc-mybatis.xml</ruleset>
           </rulesets>
           <excludes>
             <exclude>**/FixClassTypeResolver.java</exclude>

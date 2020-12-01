@@ -683,4 +683,16 @@
         ]]>
     </entry>
     <!-- dc 规则 end-->
+
+    <entry key="xml.mybatis.dc.NoSelectColumnsRule.rule.msg">
+        <![CDATA[数据库查询不允许"Select * "。]]>
+    </entry>
+    <entry key="java.exception.dc.AvoidCreateBusiExceptionUsingNonErrorCode.rule.desc">
+        <![CDATA[
+            数据库查询应使用具体字段，不应使用"*"获取全部列。
+        ]]>
+    </entry>
+    <entry key="xml.mybatis.dc.NoSelectColumnsRule.rule.violation.msg">
+        <![CDATA[[%s]:数据库查询不允许"Select * "。]]>
+    </entry>
 </properties>

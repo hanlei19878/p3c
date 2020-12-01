@@ -1,0 +1,1407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test-data xmlns="http://pmd.sourceforge.net/rule-tests"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://pmd.sourceforge.net/rule-tests https://pmd.sourceforge.io/rule-tests_1_0_0.xsd">
+    <code-fragment id="TestMyBatisRule"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dcits.ensemble.dbmanage.dao.MbAcctDao">
+    <!-- Created by furongb on 2015/12/09 14:58:10. -->
+    <sql id="Base_Column_List">
+            ACCOUNTING_STATUS,ACCOUNTING_STATUS_PREV,ACCOUNT_STATUS_UPD_DATE,ACCT_CLASS,ACCT_CLOSE_DATE,ACCT_CLOSE_REASON,
+            ACCT_CLOSE_USER_ID,ACCT_DESC,ACCT_DUE_DATE,ACCT_EXEC,ACCT_LICENSE_DATE,ACCT_LICENSE_NO,ACCT_NAME,ACCT_NATURE,
+            ACCT_OPEN_DATE,ACCT_REAL_FLAG,ACCT_SEQ_NO,ACCT_STATUS,ACCT_STATUS_PREV,ACCT_STATUS_UPD_DATE,ACCT_STOP_PAY,
+            ACCT_TYPE,ACCT_VERIFICATION_IND,ADDTL_PRINCIPAL,ALL_DEP_IND,ALL_DRA_IND,ALT_ACCT_NAME,APPLY_BRANCH,APPROVAL_DATE,
+            APPROVAL_STATUS,APPR_LETTER_NO,APPR_USER_ID,AUTO_RENEW_ROLLOVER,AUTO_SETTLE,BAL_TYPE,BASE_ACCT_NO,BRANCH,
+            BUSINESS_UNIT,CARD_NO,CCY,CLIENT_NO,CLIENT_TYPE,CMISLOAN_NO,COMPANY,CUR_STAGE_NO,DAC_VALUE,DORMANT_DATE,
+            EFFECT_DATE,FIVE_CATEGORY,FIXED_CALL,GL_TYPE,HOME_BRANCH,INTERNAL_KEY,INT_IND,LAST_CHANGE_DATE,LAST_CHANGE_USER_ID,
+            LAST_MVMT_STATUS,LAST_TRAN_DATE,LEAD_ACCT_FLAG,LENDER,MAIN_BAL_FLAG,MAIN_INT_FLAG,MATURITY_DATE,MM_REF_NO,
+            MULTI_BAL_TYPE,NOTICE_PERIOD,OLD_PROD_TYPE,OPEN_TRAN_DATE,ORIG_ACCT_OPEN_DATE,ORI_MATURITY_DATE,OSA_FLAG,
+            OWNERSHIP_TYPE,PARENT_INTERNAL_KEY,PARTIAL_RENEW_ROLL,PROD_TYPE,PROFIT_CENTRE,REASON_CODE,REGEN_SCHEDULE,
+            REGION_FLAG,RENEW_NO,ROLLOVER_NO,ROUTER_KEY,SCHED_MODE,SETTLE,SETTLE_DATE,SETTLE_USER_ID,SOURCE_MODULE,
+            SOURCE_TYPE,SUB_PROJECT_NO,SUB_SCHED_MODE,TERM,TERMINAL_ID,TERM_TYPE,TIMES_RENEWED,TIMES_ROLLEDOVER,
+            TRAN_TIME,TRAN_TIMESTAMP,USER_ID,XRATE,XRATE_ID,PRE_SPLIT_CYCLE,RELATED_PARTY
+     </sql>
+    <sql id="MBA_List">
+        ma.ACCOUNTING_STATUS,ma.ACCOUNTING_STATUS_PREV,ma.ACCOUNT_STATUS_UPD_DATE,ma.ACCT_CLASS,ma.ACCT_CLOSE_DATE,
+        ma.ACCT_CLOSE_REASON,ma.ACCT_CLOSE_USER_ID,ma.ACCT_DESC,ma.ACCT_DUE_DATE,ma.ACCT_EXEC,ma.ACCT_LICENSE_DATE,
+        ma.ACCT_LICENSE_NO,ma.ACCT_NAME,ma.ACCT_NATURE,ma.ACCT_OPEN_DATE,ma.ACCT_REAL_FLAG,ma.ACCT_SEQ_NO,ma.ACCT_STATUS,
+        ma.ACCT_STATUS_PREV,ma.ACCT_STATUS_UPD_DATE,ma.ACCT_STOP_PAY,ma.ACCT_TYPE,ma.ACCT_VERIFICATION_IND,ma.ADDTL_PRINCIPAL,
+        ma.ALL_DEP_IND,ma.ALL_DRA_IND,ma.ALT_ACCT_NAME,ma.APPLY_BRANCH,ma.APPROVAL_DATE,ma.APPROVAL_STATUS,ma.APPR_LETTER_NO,
+        ma.APPR_USER_ID,ma.AUTO_RENEW_ROLLOVER,ma.AUTO_SETTLE,ma.BAL_TYPE,ma.BASE_ACCT_NO,ma.BRANCH,ma.BUSINESS_UNIT,ma.CARD_NO,
+        ma.CCY,ma.CLIENT_NO,ma.CLIENT_TYPE,ma.CMISLOAN_NO,ma.COMPANY,ma.CUR_STAGE_NO,ma.DAC_VALUE,ma.DORMANT_DATE,ma.EFFECT_DATE,
+        ma.FIVE_CATEGORY,ma.FIXED_CALL,ma.GL_TYPE,ma.HOME_BRANCH,ma.INTERNAL_KEY,ma.INT_IND,ma.LAST_CHANGE_DATE,
+        ma.LAST_CHANGE_USER_ID,ma.LAST_MVMT_STATUS,ma.LAST_TRAN_DATE,ma.LEAD_ACCT_FLAG,ma.LENDER,ma.MAIN_BAL_FLAG,
+        ma.MAIN_INT_FLAG,ma.MATURITY_DATE,ma.MM_REF_NO,ma.MULTI_BAL_TYPE,ma.NOTICE_PERIOD,ma.OLD_PROD_TYPE,ma.OPEN_TRAN_DATE,
+        ma.ORIG_ACCT_OPEN_DATE,ma.ORI_MATURITY_DATE,ma.OSA_FLAG,ma.OWNERSHIP_TYPE,ma.PARENT_INTERNAL_KEY,ma.PARTIAL_RENEW_ROLL,
+        ma.PROD_TYPE,ma.PROFIT_CENTRE,ma.REASON_CODE,ma.REGEN_SCHEDULE,ma.REGION_FLAG,ma.RENEW_NO,ma.ROLLOVER_NO,ma.ROUTER_KEY,
+        ma.SCHED_MODE,ma.SETTLE,ma.SETTLE_DATE,ma.SETTLE_USER_ID,ma.SOURCE_MODULE,ma.SOURCE_TYPE,ma.SUB_PROJECT_NO,
+        ma.SUB_SCHED_MODE,ma.TERM,ma.TERMINAL_ID,ma.TERM_TYPE,ma.TIMES_RENEWED,ma.TIMES_ROLLEDOVER,ma.TRAN_TIME,
+        ma.TRAN_TIMESTAMP,ma.USER_ID,ma.XRATE,ma.XRATE_ID,ma.PRE_SPLIT_CYCLE,ma.RELATED_PARTY
+     </sql>
+    <sql id="MAC_List">
+        ROWNUM as rno ,mac.INTERNAL_KEY, mac.BASE_ACCT_NO, mac.PROD_TYPE, mac.CCY, mac.ACCT_SEQ_NO, mac.CARD_NO, mac.BRANCH, mac.CLIENT_NO, mac.PROFIT_CENTRE,
+        mac.ACCT_OPEN_DATE, mac.EFFECT_DATE, mac.OPEN_TRAN_DATE, mac.ACCT_STATUS, mac.ACCT_STATUS_PREV, mac.ACCT_STATUS_UPD_DATE, mac.ACCOUNTING_STATUS,
+        mac.ACCOUNTING_STATUS_PREV, mac.ACCOUNT_STATUS_UPD_DATE, mac.ACCT_NAME, mac.ALT_ACCT_NAME, mac.ACCT_DESC, mac.ACCT_NATURE, mac.OWNERSHIP_TYPE, mac.ACCT_EXEC,
+        mac.ACCT_CLOSE_DATE, mac.ACCT_CLOSE_REASON, mac.ACCT_CLOSE_USER_ID, mac.ALL_DEP_IND, mac.ALL_DRA_IND, mac.ACCT_DUE_DATE, mac.ACCT_LICENSE_NO, mac.ACCT_LICENSE_DATE,
+        mac.PARENT_INTERNAL_KEY, mac.LEAD_ACCT_FLAG, mac.MULTI_BAL_TYPE, mac.BAL_TYPE, mac.OSA_FLAG, mac.REGION_FLAG, mac.APPR_LETTER_NO, mac.TERM, mac.TERM_TYPE, mac.MATURITY_DATE,
+        mac.APPLY_BRANCH, mac.HOME_BRANCH, mac.TERMINAL_ID, mac.USER_ID, mac.LAST_CHANGE_USER_ID, mac.LAST_CHANGE_DATE, mac.TIMES_RENEWED, mac.TIMES_ROLLEDOVER, mac.RENEW_NO,
+        mac.ROLLOVER_NO, mac.PARTIAL_RENEW_ROLL, mac.ADDTL_PRINCIPAL, mac.LAST_MVMT_STATUS, mac.NOTICE_PERIOD, mac.ORIG_ACCT_OPEN_DATE, mac.ORI_MATURITY_DATE, mac.ACCT_VERIFICATION_IND,
+        mac.LENDER, mac.SUB_PROJECT_NO, mac.FIVE_CATEGORY, mac.DAC_VALUE, mac.COMPANY, mac.CMISLOAN_NO, mac.XRATE, mac.XRATE_ID, mac.REASON_CODE, mac.MM_REF_NO, mac.SETTLE, mac.SETTLE_USER_ID,
+        mac.SETTLE_DATE, mac.APPROVAL_STATUS, mac.APPR_USER_ID, mac.APPROVAL_DATE, mac.SCHED_MODE, mac.SOURCE_TYPE, mac.SOURCE_MODULE, mac.BUSINESS_UNIT, mac.CLIENT_TYPE, mac.AUTO_SETTLE,
+        mac.INT_IND, mac.MAIN_BAL_FLAG, mac.MAIN_INT_FLAG, mac.ACCT_REAL_FLAG, mac.SUB_SCHED_MODE, mac.CUR_STAGE_NO, mac.GL_TYPE, mac.ACCT_CLASS, mac.ACCT_TYPE, mac.FIXED_CALL, mac.LAST_TRAN_DATE,
+        mac.DORMANT_DATE, mac.ACCT_STOP_PAY, mac.REGEN_SCHEDULE, mac.OLD_PROD_TYPE, mac.TRAN_TIMESTAMP, mac.TRAN_TIME, mac.ROUTER_KEY, mac.IS_CHECKED, mac.AUTO_RENEW_ROLLOVER, mac.PRE_SPLIT_CYCLE,mac.RELATED_PARTY
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        select *
+        from MB_ACCT
+        where INTERNAL_KEY = #{internalKey,jdbcType=DECIMAL}
+    </select>
+
+    <select id="getAcctRealFlag" parameterType="java.util.Map" resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct" >
+        select
+        <include refid="Base_Column_List"/>
+        from MB_ACCT
+        where 1=1
+        <if test="baseAcctNo != null and baseAcctNo !=''">
+            AND BASE_ACCT_NO = #{baseAcctNo,jdbcType=VARCHAR}
+        </if>
+        <if test="prodType != null and prodType !=''">
+            and PROD_TYPE = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            and ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="queryMbAcctNum" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        select distinct base_acct_no
+        from mb_acct
+        WHERE CLIENT_NO = #{clientNo,jdbcType=VARCHAR}
+        AND acct_status != 'C'
+        AND  acct_type = 'C'
+        AND  acct_class = '1'
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        delete from MB_ACCT
+        where INTERNAL_KEY = #{internalKey,jdbcType=DECIMAL}
+    </delete>
+    <update id="updateByPrimaryKey" parameterType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        update MB_ACCT
+        <set>
+            <if test="baseAcctNo != null">
+                BASE_ACCT_NO = #{baseAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodType != null">
+                PROD_TYPE = #{prodType,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null">
+                CCY = #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSeqNo != null">
+                ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cardNo != null">
+                CARD_NO = #{cardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null">
+                BRANCH = #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="clientNo != null">
+                CLIENT_NO = #{clientNo,jdbcType=VARCHAR},
+            </if>
+            <if test="profitCentre != null">
+                PROFIT_CENTRE = #{profitCentre,jdbcType=VARCHAR},
+            </if>
+            <if test="acctOpenDate != null">
+                ACCT_OPEN_DATE = #{acctOpenDate,jdbcType=VARCHAR},
+            </if>
+            <if test="effectDate != null">
+                EFFECT_DATE = #{effectDate,jdbcType=VARCHAR},
+            </if>
+            <if test="openTranDate != null">
+                OPEN_TRAN_DATE = #{openTranDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatus != null">
+                ACCT_STATUS = #{acctStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatusPrev != null">
+                ACCT_STATUS_PREV = #{acctStatusPrev,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatusUpdDate != null">
+                ACCT_STATUS_UPD_DATE = #{acctStatusUpdDate,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingStatus != null">
+                ACCOUNTING_STATUS = #{accountingStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingStatusPrev != null">
+                ACCOUNTING_STATUS_PREV = #{accountingStatusPrev,jdbcType=VARCHAR},
+            </if>
+            <if test="accountStatusUpdDate != null">
+                ACCOUNT_STATUS_UPD_DATE = #{accountStatusUpdDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctName != null">
+                ACCT_NAME = #{acctName,jdbcType=VARCHAR},
+            </if>
+            <if test="altAcctName != null">
+                ALT_ACCT_NAME = #{altAcctName,jdbcType=VARCHAR},
+            </if>
+            <if test="acctDesc != null">
+                ACCT_DESC = #{acctDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="acctNature != null">
+                ACCT_NATURE = #{acctNature,jdbcType=VARCHAR},
+            </if>
+            <if test="ownershipType != null">
+                OWNERSHIP_TYPE = #{ownershipType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctExec != null">
+                ACCT_EXEC = #{acctExec,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseDate != null">
+                ACCT_CLOSE_DATE = #{acctCloseDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseReason != null">
+                ACCT_CLOSE_REASON = #{acctCloseReason,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseUserId != null">
+                ACCT_CLOSE_USER_ID = #{acctCloseUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="allDepInd != null">
+                ALL_DEP_IND = #{allDepInd,jdbcType=VARCHAR},
+            </if>
+            <if test="allDraInd != null">
+                ALL_DRA_IND = #{allDraInd,jdbcType=VARCHAR},
+            </if>
+            <if test="acctDueDate != null">
+                ACCT_DUE_DATE = #{acctDueDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctLicenseNo != null">
+                ACCT_LICENSE_NO = #{acctLicenseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="acctLicenseDate != null">
+                ACCT_LICENSE_DATE = #{acctLicenseDate,jdbcType=VARCHAR},
+            </if>
+            <if test="parentInternalKey != null">
+                PARENT_INTERNAL_KEY = #{parentInternalKey,jdbcType=DECIMAL},
+            </if>
+            <if test="leadAcctFlag != null">
+                LEAD_ACCT_FLAG = #{leadAcctFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="multiBalType != null">
+                MULTI_BAL_TYPE = #{multiBalType,jdbcType=VARCHAR},
+            </if>
+            <if test="osaFlag != null">
+                OSA_FLAG = #{osaFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="regionFlag != null">
+                REGION_FLAG = #{regionFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="apprLetterNo != null">
+                APPR_LETTER_NO = #{apprLetterNo,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null">
+                TERM = #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null">
+                TERM_TYPE = #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="maturityDate != null">
+                MATURITY_DATE = #{maturityDate,jdbcType=VARCHAR},
+            </if>
+            <if test="applyBranch != null">
+                APPLY_BRANCH = #{applyBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="homeBranch != null">
+                HOME_BRANCH = #{homeBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="terminalId != null">
+                TERMINAL_ID = #{terminalId,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                USER_ID = #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastChangeUserId != null">
+                LAST_CHANGE_USER_ID = #{lastChangeUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastChangeDate != null">
+                LAST_CHANGE_DATE = #{lastChangeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="autoRenewRollover != null">
+                AUTO_RENEW_ROLLOVER = #{autoRenewRollover,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRenewed != null">
+                TIMES_RENEWED = #{timesRenewed,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRolledover != null">
+                TIMES_ROLLEDOVER = #{timesRolledover,jdbcType=VARCHAR},
+            </if>
+            <if test="renewNo != null">
+                RENEW_NO = #{renewNo,jdbcType=VARCHAR},
+            </if>
+            <if test="rolloverNo != null">
+                ROLLOVER_NO = #{rolloverNo,jdbcType=VARCHAR},
+            </if>
+            <if test="partialRenewRoll != null">
+                PARTIAL_RENEW_ROLL = #{partialRenewRoll,jdbcType=VARCHAR},
+            </if>
+            <if test="addtlPrincipal != null">
+                ADDTL_PRINCIPAL = #{addtlPrincipal,jdbcType=VARCHAR},
+            </if>
+            <if test="lastMvmtStatus != null">
+                LAST_MVMT_STATUS = #{lastMvmtStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="noticePeriod != null">
+                NOTICE_PERIOD = #{noticePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="origAcctOpenDate != null">
+                ORIG_ACCT_OPEN_DATE = #{origAcctOpenDate,jdbcType=VARCHAR},
+            </if>
+            <if test="oriMaturityDate != null">
+                ORI_MATURITY_DATE = #{oriMaturityDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctVerificationInd != null">
+                ACCT_VERIFICATION_IND = #{acctVerificationInd,jdbcType=VARCHAR},
+            </if>
+            <if test="lender != null">
+                LENDER = #{lender,jdbcType=VARCHAR},
+            </if>
+            <if test="subProjectNo != null">
+                SUB_PROJECT_NO = #{subProjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fiveCategory != null">
+                FIVE_CATEGORY = #{fiveCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="dacValue != null">
+                DAC_VALUE = #{dacValue,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                COMPANY = #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="cmisloanNo != null">
+                CMISLOAN_NO = #{cmisloanNo,jdbcType=VARCHAR},
+            </if>
+            <if test="xrate != null">
+                XRATE = #{xrate,jdbcType=DECIMAL},
+            </if>
+            <if test="xrateId != null">
+                XRATE_ID = #{xrateId,jdbcType=VARCHAR},
+            </if>
+            <if test="reasonCode != null">
+                REASON_CODE = #{reasonCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mmRefNo != null">
+                MM_REF_NO = #{mmRefNo,jdbcType=VARCHAR},
+            </if>
+            <if test="settle != null">
+                SETTLE = #{settle,jdbcType=VARCHAR},
+            </if>
+            <if test="settleUserId != null">
+                SETTLE_USER_ID = #{settleUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="settleDate != null">
+                SETTLE_DATE = #{settleDate,jdbcType=VARCHAR},
+            </if>
+            <if test="approvalStatus != null">
+                APPROVAL_STATUS = #{approvalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="apprUserId != null">
+                APPR_USER_ID = #{apprUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approvalDate != null">
+                APPROVAL_DATE = #{approvalDate,jdbcType=VARCHAR},
+            </if>
+            <if test="schedMode != null">
+                SCHED_MODE = #{schedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceType != null">
+                SOURCE_TYPE = #{sourceType,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceModule != null">
+                SOURCE_MODULE = #{sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="businessUnit != null">
+                BUSINESS_UNIT = #{businessUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="clientType != null">
+                CLIENT_TYPE = #{clientType,jdbcType=VARCHAR},
+            </if>
+            <if test="autoSettle != null">
+                AUTO_SETTLE = #{autoSettle,jdbcType=VARCHAR},
+            </if>
+            <if test="intInd != null">
+                INT_IND = #{intInd,jdbcType=VARCHAR},
+            </if>
+            <if test="mainBalFlag != null">
+                MAIN_BAL_FLAG = #{mainBalFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="mainIntFlag != null">
+                MAIN_INT_FLAG = #{mainIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="acctRealFlag != null">
+                ACCT_REAL_FLAG = #{acctRealFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="subSchedMode != null">
+                SUB_SCHED_MODE = #{subSchedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="curStageNo != null">
+                CUR_STAGE_NO = #{curStageNo,jdbcType=VARCHAR},
+            </if>
+            <if test="glType != null">
+                GL_TYPE = #{glType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctClass != null">
+                ACCT_CLASS = #{acctClass,jdbcType=VARCHAR},
+            </if>
+            <if test="routerKey != null">
+                ROUTER_KEY = #{routerKey,jdbcType=VARCHAR},
+            </if>
+            <if test="tranTime != null">
+                TRAN_TIME = #{tranTime,jdbcType=DECIMAL},
+            </if>
+            <if test="tranTimestamp != null">
+                TRAN_TIMESTAMP = #{tranTimestamp,jdbcType=VARCHAR},
+            </if>
+            <if test="acctType != null">
+                ACCT_TYPE = #{acctType,jdbcType=VARCHAR},
+            </if>
+            <if test="fixedCall != null">
+                FIXED_CALL = #{fixedCall,jdbcType=VARCHAR},
+            </if>
+            <if test="lastTranDate != null">
+                LAST_TRAN_DATE = #{lastTranDate,jdbcType=VARCHAR},
+            </if>
+            <if test="dormantDate != null">
+                DORMANT_DATE = #{dormantDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStopPay != null">
+                ACCT_STOP_PAY = #{acctStopPay,jdbcType=VARCHAR},
+            </if>
+            <if test="regenSchedule != null">
+                REGEN_SCHEDULE = #{regenSchedule,jdbcType=VARCHAR},
+            </if>
+            <if test="isChecked != null">
+                IS_CHECKED = #{isChecked,jdbcType=VARCHAR},
+            </if>
+            <if test="preSplitCycle != null">
+                PRE_SPLIT_CYCLE = #{preSplitCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="relatedParty != null">
+                RELATED_PARTY = #{relatedParty,jdbcType=VARCHAR}
+            </if>
+        </set>
+        where INTERNAL_KEY = #{internalKey,jdbcType=DECIMAL}
+    </update>
+    <insert id="insert" parameterType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        insert into MB_ACCT
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="internalKey != null">
+                INTERNAL_KEY,
+            </if>
+            <if test="baseAcctNo != null">
+                BASE_ACCT_NO,
+            </if>
+            <if test="prodType != null">
+                PROD_TYPE,
+            </if>
+            <if test="ccy != null">
+                CCY,
+            </if>
+            <if test="acctSeqNo != null">
+                ACCT_SEQ_NO,
+            </if>
+            <if test="cardNo != null">
+                CARD_NO,
+            </if>
+            <if test="branch != null">
+                BRANCH,
+            </if>
+            <if test="clientNo != null">
+                CLIENT_NO,
+            </if>
+            <if test="profitCentre != null">
+                PROFIT_CENTRE,
+            </if>
+            <if test="acctOpenDate != null">
+                ACCT_OPEN_DATE,
+            </if>
+            <if test="effectDate != null">
+                EFFECT_DATE,
+            </if>
+            <if test="openTranDate != null">
+                OPEN_TRAN_DATE,
+            </if>
+            <if test="acctStatus != null">
+                ACCT_STATUS,
+            </if>
+            <if test="acctStatusPrev != null">
+                ACCT_STATUS_PREV,
+            </if>
+            <if test="acctStatusUpdDate != null">
+                ACCT_STATUS_UPD_DATE,
+            </if>
+            <if test="accountingStatus != null">
+                ACCOUNTING_STATUS,
+            </if>
+            <if test="accountingStatusPrev != null">
+                ACCOUNTING_STATUS_PREV,
+            </if>
+            <if test="accountStatusUpdDate != null">
+                ACCOUNT_STATUS_UPD_DATE,
+            </if>
+            <if test="acctName != null">
+                ACCT_NAME,
+            </if>
+            <if test="altAcctName != null">
+                ALT_ACCT_NAME,
+            </if>
+            <if test="acctDesc != null">
+                ACCT_DESC,
+            </if>
+            <if test="acctNature != null">
+                ACCT_NATURE,
+            </if>
+            <if test="ownershipType != null">
+                OWNERSHIP_TYPE,
+            </if>
+            <if test="acctExec != null">
+                ACCT_EXEC,
+            </if>
+            <if test="acctCloseDate != null">
+                ACCT_CLOSE_DATE,
+            </if>
+            <if test="acctCloseReason != null">
+                ACCT_CLOSE_REASON,
+            </if>
+            <if test="acctCloseUserId != null">
+                ACCT_CLOSE_USER_ID,
+            </if>
+            <if test="allDepInd != null">
+                ALL_DEP_IND,
+            </if>
+            <if test="allDraInd != null">
+                ALL_DRA_IND,
+            </if>
+            <if test="acctDueDate != null">
+                ACCT_DUE_DATE,
+            </if>
+            <if test="acctLicenseNo != null">
+                ACCT_LICENSE_NO,
+            </if>
+            <if test="acctLicenseDate != null">
+                ACCT_LICENSE_DATE,
+            </if>
+            <if test="parentInternalKey != null">
+                PARENT_INTERNAL_KEY,
+            </if>
+            <if test="leadAcctFlag != null">
+                LEAD_ACCT_FLAG,
+            </if>
+            <if test="multiBalType != null">
+                MULTI_BAL_TYPE,
+            </if>
+            <if test="osaFlag != null">
+                OSA_FLAG,
+            </if>
+            <if test="regionFlag != null">
+                REGION_FLAG,
+            </if>
+            <if test="apprLetterNo != null">
+                APPR_LETTER_NO,
+            </if>
+            <if test="term != null">
+                TERM,
+            </if>
+            <if test="termType != null">
+                TERM_TYPE,
+            </if>
+            <if test="maturityDate != null">
+                MATURITY_DATE,
+            </if>
+            <if test="applyBranch != null">
+                APPLY_BRANCH,
+            </if>
+            <if test="homeBranch != null">
+                HOME_BRANCH,
+            </if>
+            <if test="terminalId != null">
+                TERMINAL_ID,
+            </if>
+            <if test="userId != null">
+                USER_ID,
+            </if>
+            <if test="lastChangeUserId != null">
+                LAST_CHANGE_USER_ID,
+            </if>
+            <if test="lastChangeDate != null">
+                LAST_CHANGE_DATE,
+            </if>
+            <if test="autoRenewRollover != null">
+                AUTO_RENEW_ROLLOVER,
+            </if>
+            <if test="timesRenewed != null">
+                TIMES_RENEWED,
+            </if>
+            <if test="timesRolledover != null">
+                TIMES_ROLLEDOVER,
+            </if>
+            <if test="renewNo != null">
+                RENEW_NO,
+            </if>
+            <if test="rolloverNo != null">
+                ROLLOVER_NO,
+            </if>
+            <if test="partialRenewRoll != null">
+                PARTIAL_RENEW_ROLL,
+            </if>
+            <if test="addtlPrincipal != null">
+                ADDTL_PRINCIPAL,
+            </if>
+            <if test="lastMvmtStatus != null">
+                LAST_MVMT_STATUS,
+            </if>
+            <if test="noticePeriod != null">
+                NOTICE_PERIOD,
+            </if>
+            <if test="origAcctOpenDate != null">
+                ORIG_ACCT_OPEN_DATE,
+            </if>
+            <if test="oriMaturityDate != null">
+                ORI_MATURITY_DATE,
+            </if>
+            <if test="acctVerificationInd != null">
+                ACCT_VERIFICATION_IND,
+            </if>
+            <if test="lender != null">
+                LENDER,
+            </if>
+            <if test="subProjectNo != null">
+                SUB_PROJECT_NO,
+            </if>
+            <if test="fiveCategory != null">
+                FIVE_CATEGORY,
+            </if>
+            <if test="dacValue != null">
+                DAC_VALUE,
+            </if>
+            <if test="company != null">
+                COMPANY,
+            </if>
+            <if test="cmisloanNo != null">
+                CMISLOAN_NO,
+            </if>
+            <if test="xrate != null">
+                XRATE,
+            </if>
+            <if test="xrateId != null">
+                XRATE_ID,
+            </if>
+            <if test="reasonCode != null">
+                REASON_CODE,
+            </if>
+            <if test="mmRefNo != null">
+                MM_REF_NO,
+            </if>
+            <if test="settle != null">
+                SETTLE,
+            </if>
+            <if test="settleUserId != null">
+                SETTLE_USER_ID,
+            </if>
+            <if test="settleDate != null">
+                SETTLE_DATE,
+            </if>
+            <if test="approvalStatus != null">
+                APPROVAL_STATUS,
+            </if>
+            <if test="apprUserId != null">
+                APPR_USER_ID,
+            </if>
+            <if test="approvalDate != null">
+                APPROVAL_DATE,
+            </if>
+            <if test="schedMode != null">
+                SCHED_MODE,
+            </if>
+            <if test="sourceType != null">
+                SOURCE_TYPE,
+            </if>
+            <if test="sourceModule != null">
+                SOURCE_MODULE,
+            </if>
+            <if test="businessUnit != null">
+                BUSINESS_UNIT,
+            </if>
+            <if test="clientType != null">
+                CLIENT_TYPE,
+            </if>
+            <if test="autoSettle != null">
+                AUTO_SETTLE,
+            </if>
+            <if test="intInd != null">
+                INT_IND,
+            </if>
+            <if test="mainBalFlag != null">
+                MAIN_BAL_FLAG,
+            </if>
+            <if test="mainIntFlag != null">
+                MAIN_INT_FLAG,
+            </if>
+            <if test="acctRealFlag != null">
+                ACCT_REAL_FLAG,
+            </if>
+            <if test="subSchedMode != null">
+                SUB_SCHED_MODE,
+            </if>
+            <if test="curStageNo != null">
+                CUR_STAGE_NO,
+            </if>
+            <if test="glType != null">
+                GL_TYPE,
+            </if>
+            <if test="acctClass != null">
+                ACCT_CLASS,
+            </if>
+            <if test="acctType != null">
+                ACCT_TYPE,
+            </if>
+            <if test="fixedCall != null">
+                FIXED_CALL,
+            </if>
+            <if test="lastTranDate != null">
+                LAST_TRAN_DATE,
+            </if>
+            <if test="dormantDate != null">
+                DORMANT_DATE,
+            </if>
+            <if test="acctStopPay != null">
+                ACCT_STOP_PAY,
+            </if>
+            <if test="regenSchedule != null">
+                REGEN_SCHEDULE,
+            </if>
+            <if test="balType != null">
+                BAL_TYPE,
+            </if>
+            <if test="routerKey != null">
+                ROUTER_KEY ,
+            </if>
+            <if test="tranTime != null">
+                TRAN_TIME ,
+            </if>
+            <if test="tranTimestamp != null">
+                TRAN_TIMESTAMP,
+            </if>
+            <if test="preSplitCycle != null">
+                PRE_SPLIT_CYCLE,
+            </if>
+            <if test="relatedParty != null">
+                RELATED_PARTY,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="internalKey != null">
+                #{internalKey,jdbcType=DECIMAL},
+            </if>
+            <if test="baseAcctNo != null">
+                #{baseAcctNo,jdbcType=VARCHAR},
+            </if>
+            <if test="prodType != null">
+                #{prodType,jdbcType=VARCHAR},
+            </if>
+            <if test="ccy != null">
+                #{ccy,jdbcType=VARCHAR},
+            </if>
+            <if test="acctSeqNo != null">
+                #{acctSeqNo,jdbcType=VARCHAR},
+            </if>
+            <if test="cardNo != null">
+                #{cardNo,jdbcType=VARCHAR},
+            </if>
+            <if test="branch != null">
+                #{branch,jdbcType=VARCHAR},
+            </if>
+            <if test="clientNo != null">
+                #{clientNo,jdbcType=VARCHAR},
+            </if>
+            <if test="profitCentre != null">
+                #{profitCentre,jdbcType=VARCHAR},
+            </if>
+            <if test="acctOpenDate != null">
+                #{acctOpenDate,jdbcType=VARCHAR},
+            </if>
+            <if test="effectDate != null">
+                #{effectDate,jdbcType=VARCHAR},
+            </if>
+            <if test="openTranDate != null">
+                #{openTranDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatus != null">
+                #{acctStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatusPrev != null">
+                #{acctStatusPrev,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStatusUpdDate != null">
+                #{acctStatusUpdDate,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingStatus != null">
+                #{accountingStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="accountingStatusPrev != null">
+                #{accountingStatusPrev,jdbcType=VARCHAR},
+            </if>
+            <if test="accountStatusUpdDate != null">
+                #{accountStatusUpdDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctName != null">
+                #{acctName,jdbcType=VARCHAR},
+            </if>
+            <if test="altAcctName != null">
+                #{altAcctName,jdbcType=VARCHAR},
+            </if>
+            <if test="acctDesc != null">
+                #{acctDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="acctNature != null">
+                #{acctNature,jdbcType=VARCHAR},
+            </if>
+            <if test="ownershipType != null">
+                #{ownershipType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctExec != null">
+                #{acctExec,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseDate != null">
+                #{acctCloseDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseReason != null">
+                #{acctCloseReason,jdbcType=VARCHAR},
+            </if>
+            <if test="acctCloseUserId != null">
+                #{acctCloseUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="allDepInd != null">
+                #{allDepInd,jdbcType=VARCHAR},
+            </if>
+            <if test="allDraInd != null">
+                #{allDraInd,jdbcType=VARCHAR},
+            </if>
+            <if test="acctDueDate != null">
+                #{acctDueDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctLicenseNo != null">
+                #{acctLicenseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="acctLicenseDate != null">
+                #{acctLicenseDate,jdbcType=VARCHAR},
+            </if>
+            <if test="parentInternalKey != null">
+                #{parentInternalKey,jdbcType=DECIMAL},
+            </if>
+            <if test="leadAcctFlag != null">
+                #{leadAcctFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="multiBalType != null">
+                #{multiBalType,jdbcType=VARCHAR},
+            </if>
+            <if test="osaFlag != null">
+                #{osaFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="regionFlag != null">
+                #{regionFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="apprLetterNo != null">
+                #{apprLetterNo,jdbcType=VARCHAR},
+            </if>
+            <if test="term != null">
+                #{term,jdbcType=VARCHAR},
+            </if>
+            <if test="termType != null">
+                #{termType,jdbcType=VARCHAR},
+            </if>
+            <if test="maturityDate != null">
+                #{maturityDate,jdbcType=VARCHAR},
+            </if>
+            <if test="applyBranch != null">
+                #{applyBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="homeBranch != null">
+                #{homeBranch,jdbcType=VARCHAR},
+            </if>
+            <if test="terminalId != null">
+                #{terminalId,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastChangeUserId != null">
+                #{lastChangeUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="lastChangeDate != null">
+                #{lastChangeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="autoRenewRollover != null">
+                #{autoRenewRollover,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRenewed != null">
+                #{timesRenewed,jdbcType=VARCHAR},
+            </if>
+            <if test="timesRolledover != null">
+                #{timesRolledover,jdbcType=VARCHAR},
+            </if>
+            <if test="renewNo != null">
+                #{renewNo,jdbcType=VARCHAR},
+            </if>
+            <if test="rolloverNo != null">
+                #{rolloverNo,jdbcType=VARCHAR},
+            </if>
+            <if test="partialRenewRoll != null">
+                #{partialRenewRoll,jdbcType=VARCHAR},
+            </if>
+            <if test="addtlPrincipal != null">
+                #{addtlPrincipal,jdbcType=VARCHAR},
+            </if>
+            <if test="lastMvmtStatus != null">
+                #{lastMvmtStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="noticePeriod != null">
+                #{noticePeriod,jdbcType=VARCHAR},
+            </if>
+            <if test="origAcctOpenDate != null">
+                #{origAcctOpenDate,jdbcType=VARCHAR},
+            </if>
+            <if test="oriMaturityDate != null">
+                #{oriMaturityDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctVerificationInd != null">
+                #{acctVerificationInd,jdbcType=VARCHAR},
+            </if>
+            <if test="lender != null">
+                #{lender,jdbcType=VARCHAR},
+            </if>
+            <if test="subProjectNo != null">
+                #{subProjectNo,jdbcType=VARCHAR},
+            </if>
+            <if test="fiveCategory != null">
+                #{fiveCategory,jdbcType=VARCHAR},
+            </if>
+            <if test="dacValue != null">
+                #{dacValue,jdbcType=VARCHAR},
+            </if>
+            <if test="company != null">
+                #{company,jdbcType=VARCHAR},
+            </if>
+            <if test="cmisloanNo != null">
+                #{cmisloanNo,jdbcType=VARCHAR},
+            </if>
+            <if test="xrate != null">
+                #{xrate,jdbcType=DECIMAL},
+            </if>
+            <if test="xrateId != null">
+                #{xrateId,jdbcType=VARCHAR},
+            </if>
+            <if test="reasonCode != null">
+                #{reasonCode,jdbcType=VARCHAR},
+            </if>
+            <if test="mmRefNo != null">
+                #{mmRefNo,jdbcType=VARCHAR},
+            </if>
+            <if test="settle != null">
+                #{settle,jdbcType=VARCHAR},
+            </if>
+            <if test="settleUserId != null">
+                #{settleUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="settleDate != null">
+                #{settleDate,jdbcType=VARCHAR},
+            </if>
+            <if test="approvalStatus != null">
+                #{approvalStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="apprUserId != null">
+                #{apprUserId,jdbcType=VARCHAR},
+            </if>
+            <if test="approvalDate != null">
+                #{approvalDate,jdbcType=VARCHAR},
+            </if>
+            <if test="schedMode != null">
+                #{schedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceType != null">
+                #{sourceType,jdbcType=VARCHAR},
+            </if>
+            <if test="sourceModule != null">
+                #{sourceModule,jdbcType=VARCHAR},
+            </if>
+            <if test="businessUnit != null">
+                #{businessUnit,jdbcType=VARCHAR},
+            </if>
+            <if test="clientType != null">
+                #{clientType,jdbcType=VARCHAR},
+            </if>
+            <if test="autoSettle != null">
+                #{autoSettle,jdbcType=VARCHAR},
+            </if>
+            <if test="intInd != null">
+                #{intInd,jdbcType=VARCHAR},
+            </if>
+            <if test="mainBalFlag != null">
+                #{mainBalFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="mainIntFlag != null">
+                #{mainIntFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="acctRealFlag != null">
+                #{acctRealFlag,jdbcType=VARCHAR},
+            </if>
+            <if test="subSchedMode != null">
+                #{subSchedMode,jdbcType=VARCHAR},
+            </if>
+            <if test="curStageNo != null">
+                #{curStageNo,jdbcType=VARCHAR},
+            </if>
+            <if test="glType != null">
+                #{glType,jdbcType=VARCHAR},
+            </if>
+            <if test="acctClass != null">
+                #{acctClass,jdbcType=VARCHAR},
+            </if>
+            <if test="acctType != null">
+                #{acctType,jdbcType=VARCHAR},
+            </if>
+            <if test="fixedCall != null">
+                #{fixedCall,jdbcType=VARCHAR},
+            </if>
+            <if test="lastTranDate != null">
+                #{lastTranDate,jdbcType=VARCHAR},
+            </if>
+            <if test="dormantDate != null">
+                #{dormantDate,jdbcType=VARCHAR},
+            </if>
+            <if test="acctStopPay != null">
+                #{acctStopPay,jdbcType=VARCHAR},
+            </if>
+            <if test="regenSchedule != null">
+                #{regenSchedule,jdbcType=VARCHAR},
+            </if>
+            <if test="balType != null">
+                #{balType,jdbcType=VARCHAR},
+            </if>
+            <if test="routerKey != null">
+                #{routerKey,jdbcType=VARCHAR},
+            </if>
+            <if test="tranTime != null">
+                #{tranTime,jdbcType=DECIMAL},
+            </if>
+            <if test="tranTimestamp != null">
+                #{tranTimestamp,jdbcType=VARCHAR},
+            </if>
+            <if test="preSplitCycle != null">
+                #{preSplitCycle,jdbcType=VARCHAR},
+            </if>
+            <if test="relatedParty != null">
+                #{relatedParty,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getMbAcctSelective" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no =#{baseAcctNo,jdbcType=VARCHAR}
+        <if test="statusFlag==null or statusFlag==''">
+            AND acct_status != 'C'
+        </if>
+        <if test="acctType != null and acctType !=''">
+            AND acct_type = #{acctType,jdbcType=VARCHAR}
+        </if>
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy !=''">
+            AND ccy = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getAllMbAcctSelect" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no =#{baseAcctNo,jdbcType=VARCHAR}
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy !=''">
+            AND ccy = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO+0 ASC
+    </select>
+
+    <select id="getMbAcctSelective1" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no =#{baseAcctNo,jdbcType=VARCHAR}
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy !=''">
+            AND ccy = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO ASC
+    </select>
+    <select id="getMbAcctAllByBaseAcctNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no =#{baseAcctNo,jdbcType=VARCHAR}
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy !=''">
+            AND ccy = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbAcctForType" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct" fetchSize="5000">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE acct_status != 'C'
+        AND BRANCH =#{branch,jdbcType=VARCHAR}
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="acctName != null and acctName !=''">
+            AND ACCT_NAME LIKE '%${acctName}%'
+        </if>
+        <if test="baseAcctNo != null and baseAcctNo !=''">
+            AND BASE_ACCT_NO = #{baseAcctNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no
+    </select>
+
+    <select id="getMbAcctSelectiveByPage" parameterType="com.dcits.galaxy.dal.mybatis.proactor.page.ParameterWrapper"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no =#{baseParam.baseAcctNo,jdbcType=VARCHAR}
+        <if test="statusFlag==null or statusFlag==''">
+            AND acct_status != 'C'
+        </if>
+        <if test="baseParam.prodType != null and baseParam.prodType !=''">
+            AND prod_type = #{baseParam.prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="baseParam.ccy != null and baseParam.ccy !=''">
+            AND ccy = #{baseParam.ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="baseParam.acctSeqNo != null and baseParam.acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{baseParam.acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO ASC
+    </select>
+    <select id="getCancelMbAcct" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE  base_acct_no =#{baseAcctNo,jdbcType=VARCHAR}
+        AND (ACCT_STATUS != 'C' or (ACCT_STATUS = 'C'
+        and ACCT_CLOSE_DATE = #{runDate,jdbcType=VARCHAR}))
+        <if test="prodType != null and prodType !=''">
+            AND prod_type = #{prodType,jdbcType=VARCHAR}
+        </if>
+        <if test="ccy != null and ccy !=''">
+            AND ccy = #{ccy,jdbcType=VARCHAR}
+        </if>
+        <if test="acctSeqNo != null and acctSeqNo !=''">
+            AND ACCT_SEQ_NO = #{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY base_acct_no,ACCT_SEQ_NO+0 ASC
+    </select>
+    <select id="getAutoSettleAcctsTSplit" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="MBA_List"/>
+        FROM mb_acct ma,mb_acct_attach b
+        WHERE ma.internal_key between #{START_KEY} and #{END_KEY}
+        and ma.internal_key = b.internal_key
+        and ma.MATURITY_DATE = #{runDate,jdbcType=VARCHAR}
+        and ma.ACCT_STATUS != 'C' and b.AUTO_SETTLE_FLAG ='Y'
+        ORDER BY ma.internal_key+0 ASC
+    </select>
+
+    <select id="getMbLeadAcctByBaseAcctNo1" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+        and lead_acct_flag = 'Y'
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbRbAcctByBaseAcctNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE acct_status != 'C'
+        and base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+        and lead_acct_flag = 'N'
+        AND source_module = 'RB'
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getCancelMbLeadAcctByBaseAcctNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE (ACCT_STATUS != 'C' or (ACCT_STATUS = 'C'
+        and ACCT_CLOSE_DATE = #{runDate,jdbcType=VARCHAR}))
+        and base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+        and lead_acct_flag = 'Y'
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+    <select id="getCancelMbLeadAcctByBaseAcctNo1" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE ACCT_STATUS != 'C'
+        and base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+        and lead_acct_flag = 'Y'
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbAcctByBaseAcctNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE acct_status != 'C'
+        and base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbAcctByBaseAcctNoAndGlCode" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="MBA_List"/>
+        FROM MB_ACCT ma
+        LEFT JOIN MB_ACCT_ATTACH B
+        ON ma.INTERNAL_KEY = B.INTERNAL_KEY
+        WHERE ma.BRANCH = #{branchId,jdbcType=VARCHAR}
+        AND B.GL_CODE = #{glCode,jdbcType=VARCHAR}
+        <if test="baseAcctNo!=null and baseAcctNo.length() > 0">
+            AND ma.BASE_ACCT_NO = #{baseAcctNo,jdbcType=VARCHAR}
+        </if>
+        <if test="statusFlag==null or statusFlag==''">
+            AND acct_status != 'C'
+        </if>
+        ORDER BY ma.ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getCancelMbAcctByBaseAcctNoAndGlCode" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="MBA_List"/>
+        FROM MB_ACCT ma
+        LEFT JOIN MB_ACCT_ATTACH B
+        ON ma.INTERNAL_KEY = B.INTERNAL_KEY
+        WHERE (ACCT_STATUS != 'C' or (ACCT_STATUS = 'C'
+        and ACCT_CLOSE_DATE = #{runDate,jdbcType=VARCHAR}))
+        AND ma.BRANCH = #{branchId,jdbcType=VARCHAR}
+        <if test="baseAcctNo != null and baseAcctNo.length() > 0">
+            AND ma.BASE_ACCT_NO = #{baseAcctNo,jdbcType=VARCHAR}
+        </if>
+        <if test="glCode != null and glCode.length() > 0">
+            AND B.GL_CODE = #{glCode,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ma.ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbAcctByBaseAcctNoor" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE BASE_ACCT_NO=#{baseAcctNo,jdbcType=VARCHAR}
+        AND lead_acct_flag != 'Y'
+        <if test="acctSeqNo!=null and acctSeqNo.length()> 0">
+            AND ACCT_SEQ_NO=#{acctSeqNo,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getClientNo" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT client_no
+        FROM mb_acct
+        WHERE base_acct_no = #{baseAcctNo}
+        <if test="acctStatus!=null and acctStatus.length()> 0">
+            AND acct_status !='C'
+        </if>
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getLinkValue" parameterType="java.util.Map" resultType="java.lang.String">
+        SELECT   INTERNAL_KEY
+        FROM mb_acct
+        WHERE base_acct_no = #{baseAcctNo,jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllMbAcctByClientNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE SOURCE_MODULE = 'RB'
+        and acct_status != 'C'
+        and client_no = #{clientNo}
+        <if test="leadAcctFlag != null and leadAcctFlag.length() > 0">
+            and LEAD_ACCT_FLAG = #{leadAcctFlag,jdbcType=VARCHAR}
+        </if>
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getAllMbAcctByClientNoJustice" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE SOURCE_MODULE = 'RB'
+        and CLIENT_NO = #{clientNo}
+        AND ACCT_REAL_FLAG !='N'
+        AND  PROD_TYPE NOT IN (select PROD_TYPE
+        from batch_mb_prod_define
+        where PROD_TYPE IN (SELECT PROD_TYPE FROM MB_ACCT WHERE SOURCE_MODULE = 'RB' and client_no = #{clientNo})
+        and ATTR_KEY = 'AGREEMENT_TYPE'
+        and STATUS='A'
+        and PROD_TYPE NOT IN('02010208'))
+        ORDER BY ACCT_SEQ_NO ASC
+    </select>
+
+    <select id="getMbAcctByClientNo" parameterType="java.util.Map"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE SOURCE_MODULE = 'RB'
+        <if test="leadAcctFlag != null and leadAcctFlag.length() > 0">
+            and LEAD_ACCT_FLAG = #{leadAcctFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="acctStatus != null and acctStatus.length() > 0">
+            and acct_status != #{acctStatus,jdbcType=VARCHAR}
+        </if>
+        and client_no = #{clientNo}
+        ORDER BY internal_key ASC
+    </select>
+
+    <select id="getMbAcctByClientNoByPage" parameterType="com.dcits.galaxy.dal.mybatis.proactor.page.ParameterWrapper"
+            resultType="com.dcits.ensemble.dbmanage.dbmodel.MbAcct">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM mb_acct
+        WHERE SOURCE_MODULE = 'RB'
+        and client_no = #{baseParam.clientNo}
+        <if test="baseParam.leadAcctFlag != null and baseParam.leadAcctFlag.length() > 0">
+            and LEAD_ACCT_FLAG = #{baseParam.leadAcctFlag,jdbcType=VARCHAR}
+        </if>
+        <if test="baseParam.acctStatus != null and baseParam.acctStatus.length() > 0">
+            and acct_status != #{baseParam.acctStatus,jdbcType=VARCHAR}
+        </if>
+        ORDER BY internal_key ASC
+    </select>
+
+    <select id="getAutoMbAcctListSplit" parameterType="java.util.Map" resultType="java.util.Map">
+        <if test="_databaseId == 'oracle'">
+            SELECT MIN (internal_key) START_KEY, MAX (internal_key) END_KEY ,COUNT(1) ROW_COUNT
+            FROM (SELECT DISTINCT a.internal_key
+            FROM mb_acct a,mb_acct_attach b
+            WHERE a.internal_key = b.internal_key
+            AND a.MATURITY_DATE = #{runDate,jdbcType=VARCHAR}
+        AND a.ACCT_STATUS != 'C'
+        AND b.AUTO_SETTLE_FLAG ='Y'
+        order by internal_key+0 ASC)
+        GROUP BY TRUNC ((ROWNUM-1) / #{maxPerCount})
+        ORDER BY START_KEY
+        </if>
+        <if test="_databaseId == 'mysql'">
+        SELECT
+        MIN( key_field ) START_KEY,
+        MAX( key_field ) END_KEY,
+        count( 1 ) ROW_COUNT
+        FROM
+        (
+        SELECT
+        key_field,
+        @rownum := @rownum + 1 AS rownum
+        FROM
+        (
+        SELECT DISTINCT
+        a.internal_key key_field
+        FROM
+        mb_acct a,
+        mb_acct_attach b
+        WHERE
+        a.internal_key = b.internal_key
+        AND a.MATURITY_DATE = #{runDate,jdbcType=VARCHAR}
+        AND a.ACCT_STATUS != 'C'
+        AND b.AUTO_SETTLE_FLAG = 'Y'
+        ) t1,
+        ( SELECT @rownum := - 1 ) t
+        ORDER BY
+        key_field
+        ) tt
+        GROUP BY
+        FLOOR( tt.rownum / #{maxPerCount} )
+    </if>
+</select>
+
+        </mapper>
+    ]]>
+    </code-fragment>
+
+    <test-code>
+        <description>TEST</description>
+        <expected-problems>1</expected-problems>
+        <expected-linenumbers>50</expected-linenumbers>
+        <code-ref id="TestMyBatisRule" />
+    </test-code>
+
+    <code-fragment id="TestMyBatisRule2"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?><a></a>
+    ]]>
+    </code-fragment>
+
+    <test-code>
+        <description>TEST2</description>
+        <expected-problems>0</expected-problems>
+        <!--        <expected-linenumbers>3,4,7,13</expected-linenumbers>-->
+        <code-ref id="TestMyBatisRule2" />
+    </test-code>
+</test-data>
