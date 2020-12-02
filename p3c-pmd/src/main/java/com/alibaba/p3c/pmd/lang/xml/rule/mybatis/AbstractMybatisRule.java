@@ -15,9 +15,12 @@ public abstract class AbstractMybatisRule extends AbstractDcXmlRule {
     public void apply(List<? extends Node> nodes, RuleContext ctx) {
         if(!nodes.isEmpty()) {
             try {
-                if (((Document) ((XmlParser.RootXmlNode) nodes.get(0)).getNode())
-                        .getDoctype().getSystemId().contains("mybatis-3-mapper.dtd")) {
-                    super.apply(nodes, ctx);
+                if(ctx.getSourceCodeFile()==null
+                        || ctx.getSourceCodeFile().getParentFile().getName().equals("mapper")) {
+                    if (((Document) ((XmlParser.RootXmlNode) nodes.get(0)).getNode())
+                            .getDoctype().getSystemId().contains("mybatis-3-mapper.dtd")) {
+                        super.apply(nodes, ctx);
+                    }
                 }
             }catch (Exception e){}
         }
