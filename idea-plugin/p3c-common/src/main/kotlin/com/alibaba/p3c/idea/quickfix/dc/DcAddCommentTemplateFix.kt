@@ -50,7 +50,7 @@ class DcAddCommentTemplateFix : InspectionGadgetsFix() {
         var isDetail = (psiMethod.body?.text?.lines()?.size?:0)>32;
         var details = "";
         if(isDetail && !psiMethod.isConstructor){
-            details="\n*\n* <p/>功能详述\n* <p/>1.TODO\n* <p/>2.TODO\n* <p/>3.TODO\n";
+            details="\n*\n* <p/><b>功能详述<b/>\n* <br/>1.TODO\n* <br/>2.TODO\n* <br/>3.TODO\n";
         }
         var ret = "";
         //处理返回
@@ -81,7 +81,7 @@ class DcAddCommentTemplateFix : InspectionGadgetsFix() {
 * TODO 功能描述 $details
 * ${paramBuffer.toString()}$ret${throwBuffer.toString()}${if(psiMethod.isDeprecated)"\n* @deprecated" else ""}
 *
-* Create At $timeC By $user
+* <p/>Create At $timeC By $user
 */
 """)
         psiMethod.addBefore(doc, psiMethod.firstChild)
@@ -98,25 +98,25 @@ class DcAddCommentTemplateFix : InspectionGadgetsFix() {
         if(psiClass.isAnnotationType||psiClass.isEnum||psiClass.isInterface){
 
         }else {
-            details = "\n* <p/>\n" +
-                    "* <p/>功能范围\n" +
-                    "* <p/>1.TODO\n" +
-                    "* <p/>2.TODO\n" +
-                    "* <p/>3.TODO"
+            details = "\n*\n" +
+                    "* <p/><b>功能范围</b>\n" +
+                    "* <br/>1.TODO\n" +
+                    "* <br/>2.TODO\n" +
+                    "* <br/>3.TODO\n* <p/>"
         }
         val doc = factory.createDocCommentFromText("""
 /**
-* <p/>Name: ${psiClass.name}
-* <p/>
-* <p/>功能描述
-* <p/>TODO 功能描述${details}
+* <b>Name: ${psiClass.name}</b>
+* 
+* <p/><b>功能描述</b>
+* <br/>TODO 功能描述${details}
 * ${if(psiClass.isDeprecated)"\n* @deprecated"  else ""}
 * @author $user
-* Create $timeC
-* Copyright (c) DigitalChina All Rights Reserved | http://www.dcits.com
+* <p/>Create $timeC
+* <br/>Copyright (c) DigitalChina All Rights Reserved | http://www.dcits.com
 *
-* 变更日期        变更人       变更简述
-*———————————————————————————————————
+* <p/> 变更日期        变更人       变更简述
+* <br/>———————————————————————————————————
 *
 */
 """)
