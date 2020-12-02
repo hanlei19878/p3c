@@ -6,6 +6,12 @@
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_en">切换语言至中文</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.success">
         <![CDATA[切换语言成功，<a href="restart">重启</a>后生效]]></entry>
+
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.cur_oracle">切换至Oracle</entry>
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.cur_mySql">切换至MySql</entry>
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.success">
+        <![CDATA[切换数据库类型成功]]></entry>
+
     <entry key="com.alibaba.p3c.idea.action.AliInspectionAction.text">编码规约扫描</entry>
     <entry key="com.alibaba.p3c.idea.action.ToggleProjectInspectionAction.text.close">关闭实时检测功能</entry>
     <entry key="com.alibaba.p3c.idea.action.ToggleProjectInspectionAction.text.open">打开实时检测功能</entry>

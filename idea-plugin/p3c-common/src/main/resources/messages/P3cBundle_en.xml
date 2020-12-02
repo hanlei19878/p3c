@@ -5,7 +5,12 @@
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_zh">Switch language to English</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.cur_en">Switch language to Chinese</entry>
     <entry key="com.alibaba.p3c.action.switch_language.text.success">
-        <![CDATA[Switch language success，<a href="restart">restart</a> to get effect.]]></entry>
+        <![CDATA[Switch language success,<a href="restart">restart</a> to get effect.]]></entry>
+
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.cur_oracle">Switch DbType to Oracle</entry>
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.cur_mySql">Switch DbType to MySql</entry>
+    <entry key="com.alibaba.p3c.action.switch_dbType.text.success">
+        <![CDATA[Switch DbType success.]]></entry>
     <entry key="com.alibaba.p3c.idea.action.AliInspectionAction.text">DC Coding Guidelines Analyze</entry>
     <entry key="com.alibaba.p3c.idea.action.ToggleProjectInspectionAction.text.close">Close inspection on the fly
     </entry>

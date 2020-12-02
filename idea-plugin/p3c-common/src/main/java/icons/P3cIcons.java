@@ -35,4 +35,5 @@ public final class P3cIcons {
     public static final Icon PROJECT_INSPECTION_OFF = IconLoader.getIcon("/icons/tingyong.png");
     public static final Icon LANGUAGE = IconLoader.getIcon("/icons/language.png");
     public static final Icon ALIBABA = IconLoader.getIcon("/icons/ali-ide-run.png");
+    public static final Icon DBTYPE = IconLoader.getIcon("/icons/db.png");
 }

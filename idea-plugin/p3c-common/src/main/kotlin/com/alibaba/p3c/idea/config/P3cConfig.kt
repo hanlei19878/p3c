@@ -15,6 +15,7 @@
  */
 package com.alibaba.p3c.idea.config
 
+import com.alibaba.p3c.pmd.lang.xml.rule.mybatis.MyBatisDbType
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -52,6 +53,21 @@ class P3cConfig : PersistentStateComponent<P3cConfig> {
     fun toggleLanguage() {
         locale = if (localeEn == locale) localeZh else localeEn
     }
+
+
+    fun toggleDbType() {
+        dbType = if ("oracle".equals(dbType)) "mySql" else "oracle"
+        MyBatisDbType.changeDbType(dbType);
+    }
+
+    var dbType: String = ""
+        get() {
+            if (field.isEmpty()) {
+                return "oracle"
+            }
+
+            return field
+        }
 
     override fun getState(): P3cConfig {
         return this

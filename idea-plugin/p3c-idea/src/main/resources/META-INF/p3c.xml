@@ -31,10 +31,15 @@
                 id="com.alibaba.p3c.idea.action.SwitchLanguageAction"
                 icon="P3cIcons.LANGUAGE">
         </action>
+        <action class="com.alibaba.p3c.idea.action.SwitchDbTypeAction"
+                id="com.alibaba.p3c.idea.action.SwitchDbTypeAction"
+                icon="P3cIcons.DBTYPE">
+        </action>
         <group popup="true" id="com.alibaba.p3c.analytics.action_group" text="编码规约" icon="P3cIcons.ALIBABA">
             <reference ref="AliP3CInspectionAction"/>
             <reference ref="ToggleProjectInspectionAction"/>
             <reference ref="com.alibaba.p3c.idea.action.SwitchLanguageAction"/>
+<!--            <reference ref="com.alibaba.p3c.idea.action.SwitchDbTypeAction"/>-->
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
     </actions>
